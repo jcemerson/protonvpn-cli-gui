@@ -1,4 +1,4 @@
-ProtonVPN-GUI
+# ProtonVPN-GUI
 
 Work in progress...
 
