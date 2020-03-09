@@ -16,12 +16,13 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import kivy
-# Minimum supported version; Ignore at your own risk.
+# Minimum supported version - Ignore at your own risk.
 kivy.require('1.10.1') # noqa
 
-# Config must be set prior to other imports due to use of Window.
-# Config must define the size prior to the Window getting created.
+# Config must be set prior to other imports due to use of Window. Config must
+# define the size prior to the Window getting created.
 from kivy.config import Config
+
 # Set config.ini setting for this instance of the app.
 Config.set('graphics', 'borderless', '0')
 Config.set('graphics', 'height', '950')
@@ -53,10 +54,7 @@ from kivy.properties import (  # noqa # pylint: disable=no-name-in-module
 from kivy.uix.boxlayout import BoxLayout  # noqa
 from kivy.uix.image import Image  # noqa
 from kivy.uix.label import Label  # noqa
-from kivy.uix.screenmanager import (  # noqa
-    FadeTransition,
-    ScreenManager,
-)
+from kivy.uix.screenmanager import FadeTransition, ScreenManager  # noqa
 
 # protonvpn-cli-ng Functions
 from protonvpn_cli import constants as pvpncli_constants  # noqa
@@ -74,7 +72,10 @@ from widgets import (  # noqa # pylint: disable=import-error
     PvpnServerTreeServerNode,
     SecureCoreNotificationPopup,
 )
-from screens import WelcomeScreen  # noqa
+from about_screen import AboutScreen  # noqa
+from init_profile_screen import InitializeProfileScreen  # noqa
+from main_screen import MainScreen  # noqa
+from welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
 PVPN_CLI_GUI_VERSION = 'ProtonVPN-CLI-GUI v0.1'
@@ -83,14 +84,17 @@ PVPN_CLI_GUI_VERSION = 'ProtonVPN-CLI-GUI v0.1'
 class ProtonVpnGui(ScreenManager, BoxLayout):
     """Top-level/root containing the "meat" of the app."""
 
-    vpn_connected = BooleanProperty(False)
+    # Consider binding to vpn_connected and schedule regular checks via
+    # is_connected(). When vpn_connected value changes (True/False), update
+    # stuff as necessary (e.g., Connection Window details, status icon (should
+    # one be implemented in the future, etc.))
+    # vpn_connected = BooleanProperty(False)
+    # self.bind(on_close_app=self.close_app)
+    # self.bind(vpn_connected=self.update_current_connection)
 
     def __init__(self):
         """Initialize the ProtonVPN GUI App."""
         super().__init__()
-
-        # Instantiate Window object for min, max, and close window functions:
-        self._app_window = Window
 
         # Capture cli and gui versions for display on welcome screen.
         welcome_screen = self.ids.welcome_screen
@@ -173,30 +177,6 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
         )
         ovpn_processes = ovpn_processes.stdout.decode("utf-8").split()
         return True if ovpn_processes != [] else False
-
-    def connection_changed(self, *dt):
-        """Compare current connection to last known; True = change."""
-        # Gather details of current connected server.
-        current_connection = pvpncli_utils.get_config_value(
-            "metadata",
-            "connected_server",
-        )
-        # Compare curren connection to last known connection.
-        if current_connection != self.last_known_connection:
-            return True
-        else:
-            return False
-
-    def check_current_cnxn(self, *dt):
-        """Update connection info if change detected."""
-        self.vpn_connected = self.is_connected()
-        # If VPN is connected:
-        if self.vpn_connected:
-            if self.connection_changed():
-                self.update_current_connection()
-        else:
-            if self.last_known_connection:
-                self.set_disconnected()
 
     def update_current_connection(self, *dt):
         """Update the current connection info."""
@@ -322,6 +302,30 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
         self.cnxn_wndw_btn.normal_img = './images/quick_connect.png'
         self.cnxn_wndw_btn.hover_img = './images/quick_connect_hover.png'
         self.cnxn_wndw_btn.source = './images/quick_connect.png'
+
+    def connection_changed(self, *dt):
+        """Compare current connection to last known; True = change."""
+        # Gather details of current connected server.
+        current_connection = pvpncli_utils.get_config_value(
+            "metadata",
+            "connected_server",
+        )
+        # Compare curren connection to last known connection.
+        if current_connection != self.last_known_connection:
+            return True
+        else:
+            return False
+
+    def check_current_cnxn(self, *dt):
+        """Update connection info if change detected."""
+        self.vpn_connected = self.is_connected()
+        # If VPN is connected:
+        if self.vpn_connected:
+            if self.connection_changed():
+                self.update_current_connection()
+        else:
+            if self.last_known_connection:
+                self.set_disconnected()
 
     def get_data_up_down(self, dt):
         """Get data transferred during session."""
@@ -764,26 +768,26 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
             self.open_connecting_notification(cnxn)
             Clock.schedule_once(partial(self.exec_cmd, cmd), 0.1)
 
-    def show_app_window(self):
+    def show_window(self):
         """Bring minimized and/or hidden App window to the forefront."""
-        self._app_window.show()
-        self._app_window.raise_window()
+        Window.show()
+        Window.raise_window()
 
     def minimize_app(self):
         """Minimize App window."""
-        self._app_window.minimize()
+        Window.minimize()
 
     def maximize_app(self):
         """Maximize App window."""
-        self._app_window.maximize()
+        Window.maximize()
 
     def restore_app(self):
         """Restore App window to pre-maximized size."""
-        self._app_window.restore()
+        Window.restore()
 
     def close_app(self):
         """Close App window."""
-        self._app_window.close()
+        Window.close()
 
     # def menu_popup(self, *args):
     #     """Define popup dialogues for the hamburger menu."""

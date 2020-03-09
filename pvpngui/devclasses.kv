@@ -1,0 +1,69 @@
+#:kivy 1.10.1
+
+# These widgets are used during devlopment to more easily identify widget and
+# layout positions by adding a canvas background color to various widgets and
+# layouts. These should be removed prior to publishing.
+
+#####################################
+#   Layouts with Background Color   #
+#####################################
+<BackgroundColor@Widget>:
+    background_color: [1, 1, 1, 1]
+    img_source: ''
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: self.img_source
+
+
+<BackgroundBoxLayout@BoxLayout+BackgroundColor>:
+    background_color: [0, 0, 0, 0]
+
+
+<BackgroundGridLayout@GridLayout+BackgroundColor>:
+    background_color: [0, 0, 0, 0]
+
+
+<BackgroundRelativeLayout@RelativeLayout+BackgroundColor>:
+    background_color: [0, 0, 0, 0]
+
+
+<BackgroundFloatLayout@FloatLayout+BackgroundColor>:
+    background_color: [0, 0, 0, 0]
+
+
+<BackgroundAnchorLayout@AnchorLayout+BackgroundColor>:
+    background_color: [0, 0, 0, 0]
+
+
+<BackgroundStackLayout@StackLayout+BackgroundColor>:
+    background_color: [0, 0, 0, 0]
+
+
+#####################################
+#   Widgets with Background Color   #
+#####################################
+<BackgroundLabel@Label+BackgroundColor>:
+    background_color: [0, 0, 0, 0]
+
+
+#####################################
+#      Define widget templates      #
+#####################################
+<BackgroundImage@Widget>:
+    background_color: [1, 1, 1, 1]
+    img_source: ''
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: self.img_source
+
+
+<BackgroundImgBoxLayout@BoxLayout+BackgroundImage>:
+    background_color: [0, 0, 0, 0]

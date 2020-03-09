@@ -21,13 +21,6 @@ import os
 # Kivy Libraries
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.properties import (  # noqa # pylint: disable=no-name-in-module
-    AliasProperty,
-    BooleanProperty,
-    ObjectProperty,
-    OptionProperty,
-    StringProperty
-)
 from kivy.uix.screenmanager import Screen
 
 # protonvpn-cli-ng Functions
@@ -46,8 +39,9 @@ class WelcomeScreen(Screen):
         app_root = App.get_running_app().root
         # If the config directory doesn't exist, start initialization.
         if not os.path.isdir(pvpncli_constants.CONFIG_DIR):
+        # if not os.path.isdir('blarg'):
             # load profile initialization process
-            Clock.schedule_once(app_root.initialize_profile)
+            Clock.schedule_once(app_root.initialize_profile, 3)
         else:
             # If the config directory does exist, check for required files.
             required_files = [
@@ -74,16 +68,6 @@ class WelcomeScreen(Screen):
                     # load connection and populate status messages on screen # noqa
                 else:
                     # load profile inititalization screen
-                    Clock.schedule_once(app_root.initialize_profile) # noqa
+                    Clock.schedule_once(app_root.initialize_profile, 3) # noqa
             except Exception as e:
                 print('Exception from verify_login_credentials: ', e)
-
-
-class InitializeProfileScreen(Screen):
-    """Create profile for VPN connection."""
-    pass
-
-
-class MainScreen(Screen):
-    """Primary screen where most app usage takes place."""
-    pass

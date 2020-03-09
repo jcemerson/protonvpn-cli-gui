@@ -1,0 +1,75 @@
+#:kivy 1.10.1
+
+#    This file is part of ProtonVPN-CLI-GUI for Linux.
+
+#    Copyright (C) <year>  <name of author>
+#
+#    ProtonVPN-CLI-GUI is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+<PvpnStandardButton>:
+    font_size: 20
+    halign: 'center'
+    background_down: './images/widget-background.png'
+    on_press: self.background_color = [88/255, 179/255, 103/255, 0.8]
+    on_release: self.background_color = (1, 1, 1, 0.8)
+
+
+<DefaultTextInput@TextInput>:
+    multiline: False
+    background_normal: './images/text-input-background-normal.png'
+    background_disabled_normal: './images/text-input-background-normal.png'
+    background_active: './images/text-input-background-active.png'
+    cursor_color: [0.3451, 0.702, 0.4039, 1]
+    foreground_color: [255, 255, 255, 1]
+    font_size: 20
+    write_tab: False
+    size_hint_y: None
+    height: 50
+
+
+<PvpnButton@Button>:
+    font_size: 20
+    halign: 'center'
+    background_down: './images/widget-background.png'
+    on_press: self.background_color: [0.3451, 0.702, 0.4039, 0.8]
+    on_release: self.background_color: [1, 1, 1, 0.8]
+
+
+<PvpnTextInput@TextInput>:
+    multiline: False
+    background_normal: './images/text-input-background-normal.png'
+    background_disabled_normal: './images/text-input-background-normal.png'
+    background_active: './images/text-input-background-active.png'
+    cursor_color: [0.3451, 0.702, 0.4039, 1]
+    foreground_color: [255, 255, 255, 1]
+    font_size: 20
+    write_tab: False
+    size_hint_y: None
+    height: 50
+
+
+<PvpnTabbedPanel@TabbedPanel>:
+    pos_hint: {'center_x': 0.5, 'center_y': 0}
+    do_default_tab: False
+
+
+<PvpnTabbedPanelItem@TabbedPanelItem>:
+    background_normal: './images/inactive-tab.png'
+    background_down: './images/active-tab.png'
+    size_hint_x: 2
+    text_size: self.size
+    font_size: 22
+    halign: 'center'
+    valign: 'middle'
