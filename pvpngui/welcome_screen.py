@@ -21,14 +21,7 @@ import os
 # Kivy Libraries
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.properties import (  # noqa # pylint: disable=no-name-in-module
-    AliasProperty,
-    BooleanProperty,
-    ObjectProperty,
-    OptionProperty,
-    StringProperty
-)
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import Screen  # , CardTransition, NoTransition
 
 # protonvpn-cli-ng Functions
 from protonvpn_cli import constants as pvpncli_constants
@@ -36,6 +29,13 @@ from protonvpn_cli import constants as pvpncli_constants
 
 class WelcomeScreen(Screen):
     """Intro screen. Check for profile & connect or request authentication."""
+
+    USER = 'wutduk'
+    CONFIG_DIR = os.path.join(os.path.expanduser("~{0}".format(USER)), ".pvpn_gui_testing")  # noqa
+    CONFIG_FILE = os.path.join(CONFIG_DIR, "pvpn-gui.cfg")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def on_enter(self):
         """Run upon screenload and call subsequent method."""
@@ -47,7 +47,7 @@ class WelcomeScreen(Screen):
         # If the config directory doesn't exist, start initialization.
         if not os.path.isdir(pvpncli_constants.CONFIG_DIR):
             # load profile initialization process
-            Clock.schedule_once(app_root.initialize_profile)
+            Clock.schedule_once(app_root.initialize_vpn_settings, 3)
         else:
             # If the config directory does exist, check for required files.
             required_files = [
@@ -74,16 +74,6 @@ class WelcomeScreen(Screen):
                     # load connection and populate status messages on screen # noqa
                 else:
                     # load profile inititalization screen
-                    Clock.schedule_once(app_root.initialize_profile) # noqa
+                    Clock.schedule_once(app_root.initialize_vpn_settings, 3) # noqa
             except Exception as e:
                 print('Exception from verify_login_credentials: ', e)
-
-
-class InitializeProfileScreen(Screen):
-    """Create profile for VPN connection."""
-    pass
-
-
-class MainScreen(Screen):
-    """Primary screen where most app usage takes place."""
-    pass

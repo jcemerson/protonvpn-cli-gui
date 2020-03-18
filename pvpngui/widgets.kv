@@ -1,0 +1,338 @@
+#:kivy 1.10.1
+
+#    This file is part of ProtonVPN-CLI-GUI for Linux.
+
+#    Copyright (C) <year>  <name of author>
+#
+#    ProtonVPN-CLI-GUI is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+<PvpnStandardButton>:
+    font_size: 20
+    halign: 'center'
+    background_down: './images/widget-background.png'
+    on_press: self.background_color = [88/255, 179/255, 103/255, 0.8]
+    on_release:
+        self.background_color = (1, 1, 1, 0.8)
+
+
+<DefaultTextInput>:
+    multiline: False
+    background_normal: './images/text-input-background-normal.png'
+    background_disabled_normal: './images/text-input-background-normal.png'
+    background_active: './images/text-input-background-active.png'
+    cursor_color: [88/255, 179/255, 103/255, 1]
+    foreground_color: [166/255, 166/255, 166/255, 1]
+    disabled_foreground_color: [80/255, 80/255, 80/255, 1]
+    font_size: 20
+    write_tab: False
+    size_hint_y: None
+    height: 50
+
+
+# <PvpnButton@Button>:
+#     font_size: 20
+#     halign: 'center'
+#     background_down: './images/widget-background.png'
+#     on_press: self.background_color: [88/255, 179/255, 103/255, 0.8]
+#     on_release: self.background_color: [1, 1, 1, 0.8]
+
+
+# <PvpnTextInput@TextInput>:
+#     multiline: False
+#     background_normal: './images/text-input-background-normal.png'
+#     background_disabled_normal: './images/text-input-background-normal.png'
+#     background_active: './images/text-input-background-active.png'
+#     cursor_color: [88/255, 179/255, 103/255, 1]
+#     foreground_color: [255, 255, 255, 1]
+#     font_size: 20
+#     write_tab: False
+#     size_hint_y: None
+#     height: 50
+
+
+<PvpnTabbedPanel@TabbedPanel>:
+    pos_hint: {'center_x': 0.5, 'center_y': 0}
+    do_default_tab: False
+
+
+<PvpnTabbedPanelItem@TabbedPanelItem>:
+    background_normal: './images/inactive-tab.png'
+    background_down: './images/active-tab.png'
+    size_hint_x: 2
+    text_size: self.size
+    font_size: 22
+    halign: 'center'
+    valign: 'middle'
+
+
+<PvpnServerTreeCountryNode>:
+    background_color: [0.1647, 0.1647, 0.2078, 1]
+    color_selected: [88/255, 179/255, 103/255, 0.1]
+    even_color: [0, 0, 0, 0]
+    odd_color: [0, 0, 0, 0]
+    height: dp(40)
+    padding: [0, 0, 20, 0]
+    spacing: 15
+    on_press: self.parent.toggle_node(self)
+    Image:
+        id: country_node_flag_icon
+        pos_hint: {'left': 0, 'center_y': 0.5}
+        size_hint: (0.1, 1)
+    Label:
+        id: country_node_country_name
+        size_hint: (0.20, 1)
+        pos_hint: {'right': 0.35, 'center_y': 0.5}
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    BoxLayout:
+        id: country_node_features_layout
+        orientation: 'horizontal'
+        size_hint: (0.08, 1)
+        pos_hint: {'right': 0.65, 'center_y': 0.5}
+    PvpnImageButton:
+        id: connect_button_icon
+        source: './images/connect-small_150.png'
+        normal_img: './images/connect-small_150.png'
+        hover_img: './images/connect-small-hover_150.png'
+        size_hint: (0.15, 0.8)
+        padding: [5, 5, 5, 5]
+        pos_hint: {'right': 1.5, 'center_y': 0.5}
+        on_press:
+            self.on_press_img()
+        on_release:
+            self.on_release_img()
+            app.root.connect(country=root.ids.country_node_country_name.text)
+
+
+<PvpnServerTreeServerNode>:
+    background_color: [0.1647, 0.1647, 0.2078, 1]
+    font_size: 19
+    even_color: [0, 0, 0, 0]
+    odd_color: [0, 0, 0, 0]
+    height: dp(40)
+    no_selection: True
+    Label:
+        id: server_node_server_load
+        size_hint: (0.025, 1)
+        pos_hint: {'left': 0, 'center_y': 0.5}
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        id: server_node_server_name
+        size_hint: (0.05, 1)
+        pos_hint: {'right': 0.2, 'center_y': 0.5}
+        size: self.texture_size
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    BoxLayout:
+        orientation: 'horizontal'
+        id: server_node_features_layout
+        size_hint: (0.035, 1)
+        pos_hint: {'right': 0.65, 'center_y': 0.5}
+        Image:
+            id: plus_server
+            size_hint: (0.55, 0.55)
+            pos_hint: {'x': 0, 'center_y': 0.5}
+        Image:
+            id: tor_or_p2p
+            size_hint: (0.55, 0.55)
+            pos_hint: {'x': 0, 'center_y': 0.5}
+    Label:
+        id: server_node_server_city
+        size_hint: (0.065, 1)
+        pos_hint: {'right': 1, 'center_y': 0.5}
+        color: [0.5176, 0.5176, 0.5569, 1]
+        size: self.texture_size
+        text_size: self.size
+        halign: 'center'
+        valign: 'center'
+    PvpnImageButton:
+        id: connect_button_icon
+        source: './images/connect-small_150.png'
+        normal_img: './images/connect-small_150.png'
+        hover_img: './images/connect-small-hover_150.png'
+        size_hint: (0.05, 0.8)
+        padding: [5, 5, 5, 5]
+        pos_hint: {'right': 1, 'center_y': 0.5}
+        on_release:
+            app.root.connect(server_name=root.ids.server_node_server_name.text)
+
+
+<PvpnPopup>:
+    size_hint: (0.95, 0.2)
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    separator_color: [88/255, 179/255, 103/255, 1]
+    title: self.title
+    title_size: 30
+    title_align: 'center'
+    auto_dismiss: True
+    background: './images/popup-background.png'
+
+
+<SecureCoreNotificationPopup>:
+    auto_dismiss: False
+    size_hint_y: 0.35
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: root.label_text
+            font_size: 23
+            text_size: self.size
+            halign: 'center'
+            valign: 'center'
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
+            PvpnStandardButton:
+                text: 'Cancel'
+                font_size: 23
+                size_hint: (0.5, 0.5)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                on_release:
+                    app.root.reset_secure_core_switch()
+                    app.root.set_sc_notification_close()
+                    root.dismiss()
+            PvpnStandardButton:
+                text: 'Continue'
+                font_size: 23
+                size_hint: (0.5, 0.5)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                on_release:
+                    Clock.schedule_once(app.root.update_secure_core_notification_text)
+
+
+<ExitPopup>:
+    id: exit_popup
+    size_hint_y: 0.3
+    auto_dismiss: False
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: root.label_text
+            font_size: 23
+            text_size: self.size
+            halign: 'center'
+            valign: 'center'
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
+            PvpnStandardButton:
+                text: 'Cancel'
+                font_size: 23
+                size_hint: (0.5, 0.75)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                on_release: root.dismiss()
+            PvpnStandardButton:
+                text: 'Confirm'
+                font_size: 23
+                size_hint: (0.5, 0.75)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                on_release: app.stop()
+
+
+<PvpnDropDownButton>:
+    font_size: 19
+    color: [166/255, 166/255, 166/255, 1]
+    halign: 'left'
+    valign: 'center'
+    text_size: self.size
+    background_normal: './images/dropdown-button-up_underline.png'
+    background_down: './images/dropdown-button-down.png'
+    size_hint_y: None
+    height: '48dp'
+    padding: [30, 10]
+
+
+<PvpnDropDown>:
+    id: pvpn_menu_dropdown
+    padding: [50 , 0, 0, 0]
+    canvas.after:
+        Color:
+            rgba:  [0.5176, 0.5176, 0.5569, 1]
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+    PvpnDropDownButton:
+        id: about_dropdown_button
+        text: 'About'
+        on_release:
+            app.root.transition = RiseInTransition()
+            app.root.current = '_about_screen_'
+            root.select('About')
+    PvpnDropDownButton:
+        id: app_settings_dropdown_button
+        text: 'App Settings'
+        on_release:
+            app.root.transition = RiseInTransition()
+            app.root.current = '_app_settings_screen_'
+            app.title = 'App Settings'
+            root.select('App Settings')
+    PvpnDropDownButton:
+        id: vpn_settings_button
+        text: 'VPN Settings'
+        on_release:
+            app.root.transition = RiseInTransition()
+            app.root.current = '_vpn_settings_screen_'
+            app.title = 'VPN Settings'
+            root.select('VPN Settings')
+    PvpnDropDownButton:
+        id: connection_profiles_dropdown_button
+        text: 'Connection Profiles'
+        on_release:
+            app.root.transition = RiseInTransition()
+            app.root.current = '_connection_profiles_screen_'
+            root.select('Connection Profiles')
+    PvpnDropDownButton:
+        id: report_bug_dropdown_button
+        text: 'Report Bug'
+        on_release:
+            app.root.transition = RiseInTransition()
+            app.root.current = '_report_bug_screen_'
+            root.select('Report Bug')
+    PvpnDropDownButton:
+        id: exit_dropdown_button
+        text: 'Exit'
+        background_normal: './images/dropdown-button-up_no_underline.png'
+        on_release:
+            app.root.open_exit_popup()
+            root.select('Exit')
+
+
+<PvpnSpinner>:
+    dropdown_cls: 'PvpnDropDown'
+    option_cls: 'PvpnSpinnerOption'
+    size_hint: (1, 0.6)
+    font_size: 20
+    color: [166/255, 166/255, 166/255, 1]
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    background_normal: './images/dropdown-button-up_underline.png'
+    background_down: './images/dropdown-button-down.png'
+    canvas.after:
+        Color:
+            rgba:  [0.5176, 0.5176, 0.5569, 1]
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+
+
+<PvpnSpinnerOption>:
+    font_size: 19
+    color: [166/255, 166/255, 166/255, 1]
+    background_normal: './images/dropdown-button-up_underline.png'
+    background_down: './images/dropdown-button-down.png'
+    size_hint_y: None
