@@ -54,7 +54,11 @@ from kivy.properties import (  # noqa # pylint: disable=no-name-in-module
 from kivy.uix.boxlayout import BoxLayout  # noqa
 from kivy.uix.image import Image  # noqa
 from kivy.uix.label import Label  # noqa
-from kivy.uix.screenmanager import FadeTransition, ScreenManager  # noqa
+from kivy.uix.screenmanager import (  # noqa
+    FadeTransition,
+    NoTransition,
+    ScreenManager,
+)
 
 # protonvpn-cli-ng Functions
 from protonvpn_cli import constants as pvpncli_constants  # noqa
@@ -64,17 +68,20 @@ from protonvpn_cli import utils as pvpncli_utils  # noqa
 
 # Local
 from widgets import (  # noqa # pylint: disable=import-error
-    ConnectingNotificationPopup,
-    DisconnectingNotificationPopup,
+    ExitPopup,
     PvpnPopup,
+    PvpnPopupLabel,
     PvpnTreeView,
     PvpnServerTreeCountryNode,
     PvpnServerTreeServerNode,
     SecureCoreNotificationPopup,
 )
 from about_screen import AboutScreen  # noqa
-from init_profile_screen import InitializeProfileScreen  # noqa
+from app_settings_screen import AppSettingsScreen  # noqa
+from connection_profiles_screen import ConnectionProfilesScreen  # noqa
+from vpn_settings_screen import VpnSettingsScreen  # noqa
 from main_screen import MainScreen  # noqa
+from report_bug_screen import ReportBugScreen  # noqa
 from welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
@@ -88,6 +95,7 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
     # is_connected(). When vpn_connected value changes (True/False), update
     # stuff as necessary (e.g., Connection Window details, status icon (should
     # one be implemented in the future, etc.))
+    # self.register_event('on_disconnect')
     # vpn_connected = BooleanProperty(False)
     # self.bind(on_close_app=self.close_app)
     # self.bind(vpn_connected=self.update_current_connection)
@@ -101,6 +109,29 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
         protonvpn_cli_version = f'ProtonVPN-CLI v{pvpncli_constants.VERSION}'
         welcome_screen.ids.pvpn_cli_version.text = protonvpn_cli_version
         welcome_screen.ids.pvpn_gui_verion.text = PVPN_CLI_GUI_VERSION
+
+    def open_exit_popup(self):
+        """Open Exit Popup to confirm exiting the application."""
+        self.exit_popup = ExitPopup(
+            title='Exit ProtonVPN-GUI?',
+            label_text="Are you sure you wish to exit the application?",
+            auto_close=False,
+        )
+        self.exit_popup.open()
+
+    def close_welcome_screen(self, dt):
+        """Transition from welcome screen after [n] seconds."""
+        self.initialize_application()
+        self.transition = FadeTransition()
+        self.current = '_main_screen_'
+
+    def initialize_vpn_settings(self, dt):
+        """Start a new profile for VPN connection."""
+        self.transition = NoTransition()
+        self.current = '_vpn_settings_screen_'
+
+    def initialize_application(self, *dt):
+        """Initialize app's main screen and subsequent functionality."""
         # Indicator that app was just initialized.
         self.app_newly_initialized = True
         # Get default protocol (TCP or UDP) and User's account tier-level.
@@ -112,8 +143,9 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
             "USER",
             "tier",
         ))
+        # Set Secure Core disabled based on Tier
         self.secure_core = self.ids.main_screen.ids.secure_core_switch
-        # 0: Free, 1: Basic, 2: Plus, etc.
+        # 0: Free, 1: Basic, 2: Plus/Visionary
         if self.tier < 2:
             self.secure_core.disabled = True
         # State of Secure Core Notification Popup
@@ -142,24 +174,8 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
             self.cnxn_wndw_btn.normal_img = './images/quick_connect.png'
             self.cnxn_wndw_btn.hover_img = './images/quick_connect_hover.png'
             self.cnxn_wndw_btn.source = './images/quick_connect.png'
-
-    def close_welcome_screen(self, dt):
-        """Transition from welcome screen after [n] seconds."""
-        self.initialize_application()
-        self.transition = FadeTransition()
-        self.current = '_main_screen_'
-
-    def initialize_profile(self, dt):
-        """Start a new profile for VPN connection."""
-        self.transition = FadeTransition()
-        self.current = '_init_profile_screen_'
-
-    def initialize_application(self):
-        """Initialize root class."""
         # Update current connection info in connection window.
         self.update_current_connection()
-        # Start regularly scheduled  status checks on connection state.
-        self.cnxn_check()
         # Initialize server tree.
         self.build_server_tree()
 
@@ -356,27 +372,32 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
     def open_connecting_notification(self, cnxn):
         """Launch popup while a new connection attempt is in progress."""
         notification = f'Connecting to {cnxn}'
-        connecting_notification_popup = ConnectingNotificationPopup(
-            label_text=notification
+        connecting_notification_popup = PvpnPopup(
+            title='New Connection',
+            label_text=notification,
         )
+        connecting_notification_label = PvpnPopupLabel(
+            text=connecting_notification_popup.label_text
+        )
+        connecting_notification_popup.add_widget(connecting_notification_label)
         connecting_notification_popup.open()
-        self.close_popup = Clock.schedule_interval(partial(
-            self.close_popup_notification,
-            connecting_notification_popup,
-        ), 0.1)
 
     def open_disconnecting_notification(self):
         """Launch popup while a disconnection attempt is in progress."""
         if not self.sc_notification_open:
             cnxn = self.last_known_connection
-            disconnecting_notification_popup = DisconnectingNotificationPopup(
-                label_text=f'Disconnecting from {cnxn}'
+            notification = f'Disconnecting from {cnxn}'
+            disconnecting_notification_popup = PvpnPopup(
+                title='Disconnecting',
+                label_text=notification,
+            )
+            disconnecting_notification_label = PvpnPopupLabel(
+                text=disconnecting_notification_popup.label_text
+            )
+            disconnecting_notification_popup.add_widget(
+                disconnecting_notification_label
             )
             disconnecting_notification_popup.open()
-            self.close_popup = Clock.schedule_interval(partial(
-                self.close_popup_notification,
-                disconnecting_notification_popup,
-            ), 0.1)
 
     def secure_core_notification(self, *dt):
         """Launch popup when Secure Core switch is toggled."""
@@ -390,7 +411,9 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
                 'connection.\nDo you want to continue?'
             )
             self.secure_core_notification_popup = SecureCoreNotificationPopup(
-                label_text=notification
+                title='Attention!',
+                label_text=notification,
+                auto_close=False,
             )
             self.sc_notification_open = True
             self.secure_core_notification_popup.open()
@@ -414,29 +437,17 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
 
     def open_building_servertree_notification(self):
         """Launch popup while rebuilding server trees in progress."""
-        building_servertree_notification = PvpnPopup(title='Loading')
-        building_servertree_notification.size_hint_y = 0.2
-
-        notification = Label()
-        notification.text = 'Rebuilding Server List...'
-        notification.font_size = '23'
-        notification.text_size = self.size
-        notification.halign = 'center'
-        notification.valign = 'center'
-
-        building_servertree_notification.add_widget(notification)
-        building_servertree_notification.open()
-
-        self.close_popup = Clock.schedule_interval(partial(
-            self.close_popup_notification,
-            building_servertree_notification,
-        ), 0.1)
-
-    def close_popup_notification(self, instance, dt):
-        """Once connection change detected, close notification popup"""
-        if self.connection_changed:
-            instance.dismiss()
-            self.close_popup.cancel()
+        building_servertree_notification_popup = PvpnPopup(
+            title='Loading',
+            label_text="Building server list...",
+        )
+        building_servertree_notification_label = PvpnPopupLabel(
+            text=building_servertree_notification_popup.label_text
+        )
+        building_servertree_notification_popup.add_widget(
+            building_servertree_notification_label
+        )
+        building_servertree_notification_popup.open()
 
     def reset_secure_core_switch(self):
         """Set Secure Core switch to the prior position."""
@@ -563,7 +574,8 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
             # Assign small flag icon for country.
             for country_dict in country_flag_icons:
                 if country == country_dict['name']:
-                    country_node.ids.country_node_flag_icon.source = country_dict['small_flag'] # noqa
+                    country_node.ids.country_node_flag_icon.source = (
+                        country_dict['small_flag'])
                     continue
             # Add feature icon to country node if any server has the feature
             # If Secure Core selected, skip features:
@@ -574,7 +586,8 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
                 for server in servers:
                     name = list(server)[0]
                     feature = server[name]['Features']
-                    # if feature in features_possible and feature not in features_found: # noqa
+                    # if feature in features_possible and feature not in
+                    # features_found.
                     if feature in features_possible:
                         if feature not in features_found:
                             img = Image(
@@ -785,45 +798,6 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
         """Restore App window to pre-maximized size."""
         Window.restore()
 
-    def close_app(self):
-        """Close App window."""
-        Window.close()
-
-    # def menu_popup(self, *args):
-    #     """Define popup dialogues for the hamburger menu."""
-    #     self.about_popup = PvpnPopup(
-    #         title='about-title',
-    #         label_text='about-label-text'
-    #     )
-    #     self.account_popup = PvpnPopup(
-    #         title='account-title',
-    #         label_text='account-label-text'
-    #     )
-    #     self.profiles_popup = PvpnPopup(
-    #         title='profiles-title',
-    #         label_text='profiles-label-text'
-    #     )
-    #     self.settings_popup = PvpnPopup(
-    #         title='settings-title',
-    #         label_text='settings-label-text'
-    #     )
-    #     self.help_popup = PvpnPopup(
-    #         title='help-title',
-    #         label_text='help-label-text'
-    #     )
-    #     self.report_bug_popup = PvpnPopup(
-    #         title='report_bug-title',
-    #         label_text='report_bug-label-text'
-    #     )
-    #     self.logout_popup = PvpnPopup(
-    #         title='logout-title',
-    #         label_text='logout-label-text'
-    #     )
-    #     self.exit_popup = PvpnPopup(
-    #         title='exit-title',
-    #         label_text='exit-label-text'
-    #     )
-
 
 class ProtonVpnGuiApp(App):
     """
@@ -834,5 +808,6 @@ class ProtonVpnGuiApp(App):
 
     def build(self):
         """Instatiate the App class and return an instance to run."""
+        self.title = 'ProtonVPN GUI'
         pvpn_gui = ProtonVpnGui()
         return pvpn_gui

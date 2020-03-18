@@ -19,25 +19,5 @@
 from kivy.uix.screenmanager import Screen
 
 
-class InitializeProfileScreen(Screen):
-    """Create profile for VPN connection."""
+class ReportBugScreen(Screen):
     pass
-    # name = StringProperty('_init_profile_screen_')
-    # # pass1 = StringProperty('')
-    # # pass2 = StringProperty('')
-
-    # def __init__(self, **kwargs):
-    #     super().__init__(**kwargs)
-
-    #     print(self.ids)
-    #     self.pass1 = self.ids
-    #     # self.pass2 = self.ids.password2
-    #     # print(self)
-    #     # self.pass1 = self.ids.password1
-    #     # self.pass2 = self.ids.password2
-
-    #     self.bind(pass1=self.confirm_password)
-
-    # def confirm_password(self):
-    #     if self.pass1:
-    #         self.pass2.disabled = False

@@ -1,5 +1,3 @@
-#:kivy 1.10.1
-
 #    This file is part of ProtonVPN-CLI-GUI for Linux.
 
 #    Copyright (C) <year>  <name of author>
@@ -17,21 +15,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# Kivy Libraries
+from kivy.uix.screenmanager import Screen
 
-<AboutScreen>:
-    name: '_about_screen_'
-    BoxLayout:
-        orientation: 'vertical'
-        padding: [60, 0, 60, 60]
-        BoxLayout:
-            orientation: 'vertical'
-            Image:
-                center: self.parent.center
-                source: './images/protonvpn-logo-white.png'
-                orientation: 'vertical'
-            PvpnStandardButton:
-                size_hint: (1, 0.1)
-                text: 'Back'
-                on_release:
-                    app.root.transition = FallOutTransition()
-                    app.root.current = '_main_screen_'
+
+class ConnectionProfilesScreen(Screen):
+    pass
