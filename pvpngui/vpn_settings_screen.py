@@ -70,7 +70,8 @@ class Dns_Input(DefaultTextInput):
                 ),
             )
             self.invalid_textinput_popup_label = PvpnPopupLabel(
-                text=self.invalid_textinput_popup.label_text
+                text=self.invalid_textinput_popup.label_text,
+                text_size=self.size,
             )
             self.invalid_textinput_popup.add_widget(
                 self.invalid_textinput_popup_label
@@ -96,7 +97,8 @@ class Dns_Input(DefaultTextInput):
                             label_text="Invalid IPv4 address",
                         )
                         self.invalid_ip_popup_label = PvpnPopupLabel(
-                            text=self.invalid_ip_popup.label_text
+                            text=self.invalid_ip_popup.label_text,
+                            text_size=self.size,
                         )
                         self.invalid_ip_popup.add_widget(
                             self.invalid_ip_popup_label
@@ -121,6 +123,7 @@ class Dns_Input(DefaultTextInput):
             )
             self.too_many_ips_popup_label = PvpnPopupLabel(
                 text=self.too_many_ips_popup.label_text,
+                text_size=self.size,
             )
             self.too_many_ips_popup_label.text_size = self.size
             self.too_many_ips_popup.add_widget(self.too_many_ips_popup_label)
@@ -433,7 +436,8 @@ class VpnSettingsScreen(Screen):
                     label_text="Passwords do not match. Try again.",
                 )
                 self.password_mismatch_popup_label = PvpnPopupLabel(
-                    text=self.password_mismatch_popup.label_text
+                    text=self.password_mismatch_popup.label_text,
+                    text_size=self.size,
                 )
                 self.password_mismatch_popup.add_widget(
                     self.password_mismatch_popup_label
@@ -474,11 +478,14 @@ class VpnSettingsScreen(Screen):
                 self.split_tunnel_popup = PvpnPopup(
                     title='Attention!',
                     label_text=(
-                        'By enabling Split Tunneling, the Kill Switch will be disabled.'
+                        'By enabling Split Tunneling,\n'
+                        'the Kill Switch will be disabled.'
                     )
+
                 )
                 self.split_tunnel_popup_label = PvpnPopupLabel(
-                    text=self.split_tunnel_popup.label_text
+                    text=self.split_tunnel_popup.label_text,
+                    text_size=self.size,
                 )
                 self.split_tunnel_popup.add_widget(
                     self.split_tunnel_popup_label
@@ -492,11 +499,12 @@ class VpnSettingsScreen(Screen):
                     title='Attention!',
                     label_text=(
                         'By enabling the Kill Switch,\n'
-                        'the Split Tunneling will be disabled.'
+                        'Split Tunneling will be disabled.'
                     )
                 )
                 self.kill_switch_popup_label = PvpnPopupLabel(
-                    text=self.kill_switch_popup.label_text
+                    text=self.kill_switch_popup.label_text,
+                    text_size=self.size,
                 )
                 self.kill_switch_popup.add_widget(self.kill_switch_popup_label)
                 self.kill_switch_popup.open()
@@ -702,7 +710,7 @@ class VpnSettingsScreen(Screen):
                         )
                         self.vpn_settings_update_label = PvpnPopupLabel(
                             text=self.vpn_settings_update_popup.label_text,
-                            text_size=(self.size[0], None),
+                            text_size=self.size,
                         )
                         self.vpn_settings_update_popup.add_widget(
                             self.vpn_settings_update_label

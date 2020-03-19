@@ -218,8 +218,7 @@ class PvpnPopupLabel(Label):
         self.font_size = 23
         self.halign = 'center'
         self.valign = 'center'
-        self.size = self.texture_size
-        self.text_size = self.size
+        # self.size = self.texture_size
 
 
 class PvpnPopup(Popup):
