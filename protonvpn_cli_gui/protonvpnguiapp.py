@@ -88,7 +88,7 @@ from .report_bug_screen import ReportBugScreen  # noqa
 from .welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
-VERSION = '0.1.5'
+VERSION = '0.1.6'
 
 # Add resource directory to Kivy Path for additional kv and image files
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
