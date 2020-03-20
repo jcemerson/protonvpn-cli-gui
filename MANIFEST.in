@@ -1,2 +1,4 @@
 include README.md LICENSE
-include ProtonVPN-GUI/protonvpn_cli_gui/images
+recursive-include protonvpn_cli_gui/images *.png *.jpeg *.jpg
+recursive-include protonvpn_cli_gui/images/flags/small *.png *.jpeg *.jpg
+recursive-include protonvpn_cli_gui/images/flags/large *.png *.jpeg *.jpg
