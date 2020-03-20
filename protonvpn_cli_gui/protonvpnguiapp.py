@@ -67,7 +67,7 @@ from protonvpn_cli import logger as pvpncli_logger  # noqa
 from protonvpn_cli import utils as pvpncli_utils  # noqa
 
 # Local
-from widgets import (  # noqa # pylint: disable=import-error
+from .widgets import (  # noqa # pylint: disable=import-error
     ExitPopup,
     PvpnPopup,
     PvpnPopupLabel,
@@ -76,20 +76,20 @@ from widgets import (  # noqa # pylint: disable=import-error
     PvpnServerTreeServerNode,
     SecureCoreNotificationPopup,
 )
-from about_screen import AboutScreen  # noqa
-from app_settings_screen import AppSettingsScreen  # noqa
-from connection_profiles_screen import ConnectionProfilesScreen  # noqa
-from vpn_settings_screen import VpnSettingsScreen  # noqa
-from main_screen import MainScreen  # noqa
-from report_bug_screen import ReportBugScreen  # noqa
-from welcome_screen import WelcomeScreen  # noqa
+from .about_screen import AboutScreen  # noqa
+from .app_settings_screen import AppSettingsScreen  # noqa
+from .connection_profiles_screen import ConnectionProfilesScreen  # noqa
+from .vpn_settings_screen import VpnSettingsScreen  # noqa
+from .main_screen import MainScreen  # noqa
+from .report_bug_screen import ReportBugScreen  # noqa
+from .welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
-PVPN_CLI_GUI_VERSION = 'ProtonVPN-CLI-GUI v0.1'
+VERSION = '0.1.2'
 
 
 class ProtonVpnGui(ScreenManager, BoxLayout):
-    """Top-level/root containing the "meat" of the app."""
+    """Top-level/root containing the foundation of the app."""
 
     # Consider binding to vpn_connected and schedule regular checks via
     # is_connected(). When vpn_connected value changes (True/False), update
@@ -108,7 +108,7 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
         welcome_screen = self.ids.welcome_screen
         protonvpn_cli_version = f'ProtonVPN-CLI v{pvpncli_constants.VERSION}'
         welcome_screen.ids.pvpn_cli_version.text = protonvpn_cli_version
-        welcome_screen.ids.pvpn_gui_verion.text = PVPN_CLI_GUI_VERSION
+        welcome_screen.ids.pvpn_gui_verion.text =  f'ProtonVPN-GUI v{VERSION}'
 
     def open_exit_popup(self):
         """Open Exit Popup to confirm exiting the application."""
@@ -377,7 +377,8 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
             label_text=notification,
         )
         connecting_notification_label = PvpnPopupLabel(
-            text=connecting_notification_popup.label_text
+            text=connecting_notification_popup.label_text,
+            text_size=self.size,
         )
         connecting_notification_popup.add_widget(connecting_notification_label)
         connecting_notification_popup.open()
@@ -392,7 +393,8 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
                 label_text=notification,
             )
             disconnecting_notification_label = PvpnPopupLabel(
-                text=disconnecting_notification_popup.label_text
+                text=disconnecting_notification_popup.label_text,
+                text_size=self.size,
             )
             disconnecting_notification_popup.add_widget(
                 disconnecting_notification_label
@@ -442,7 +444,8 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
             label_text="Building server list...",
         )
         building_servertree_notification_label = PvpnPopupLabel(
-            text=building_servertree_notification_popup.label_text
+            text=building_servertree_notification_popup.label_text,
+            text_size=self.size,
         )
         building_servertree_notification_popup.add_widget(
             building_servertree_notification_label

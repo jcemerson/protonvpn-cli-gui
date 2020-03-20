@@ -15,9 +15,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Standard Libraries
-from functools import partial
-
 # Kivy Libraries
 from kivy.clock import Clock
 from kivy.core.window import Window
@@ -190,7 +187,6 @@ class HoverBehavior(object):
         self.hovered = is_inside
         self.border_point = pos
         if is_inside:
-            # Clock.schedule_once(partial(self.dispatch, 'on_enter'), 0.01)
             self.dispatch('on_enter')  # noqa # pylint: disable=no-member
         else:
             self.dispatch('on_leave')  # noqa # pylint: disable=no-member

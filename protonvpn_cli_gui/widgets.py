@@ -42,7 +42,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.treeview import TreeView, TreeViewNode
 
 # Local
-from custombehaviors import ButtonBehavior, GrabBehavior, HoverBehavior  # noqa # pylint: disable=import-error
+from .custombehaviors import ButtonBehavior, GrabBehavior, HoverBehavior  # noqa # pylint: disable=import-error
 
 
 class DefaultTextInput(TextInput):
@@ -218,8 +218,6 @@ class PvpnPopupLabel(Label):
         self.font_size = 23
         self.halign = 'center'
         self.valign = 'center'
-        self.size = self.texture_size
-        self.text_size = self.size
 
 
 class PvpnPopup(Popup):
@@ -322,7 +320,7 @@ class PvpnDropDown(DropDown):
 
     # def collide_point(self, x, y):
     #     """
-    #     Modified from kivy.uix.widget.collied_point due to issues when working
+    #     Modified from kivy.uix.widget.collied_point due to issues when working  # noqa
     #     with dropdowns.
     #     """
     #     return x <= self.right and y <= self.top
