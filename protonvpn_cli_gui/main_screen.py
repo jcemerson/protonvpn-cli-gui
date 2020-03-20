@@ -19,7 +19,7 @@
 from kivy.uix.screenmanager import Screen
 
 # Local
-from widgets import (  # noqa # pylint: disable=import-error
+from .widgets import (  # noqa # pylint: disable=import-error
     PvpnDropDown,
 )
 
