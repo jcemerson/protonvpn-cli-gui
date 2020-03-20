@@ -85,7 +85,7 @@ from .report_bug_screen import ReportBugScreen  # noqa
 from .welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
-VERSION = '0.1.2'
+VERSION = '0.1.3'
 
 
 class ProtonVpnGui(ScreenManager, BoxLayout):
