@@ -37,6 +37,7 @@ Config.set('kivy', 'window_icon', './images/protonvpn-sign-white.png')
 
 # Standard Libraries
 from functools import partial  # noqa
+import os  # noqa
 import subprocess  # noqa
 from time import time  # noqa
 
@@ -44,6 +45,7 @@ from time import time  # noqa
 from kivy.app import App  # noqa
 from kivy.clock import Clock  # noqa
 from kivy.core.window import Window  # noqa
+from kivy.lang import Builder  # noqa
 from kivy.properties import (  # noqa # pylint: disable=no-name-in-module
     AliasProperty,
     BooleanProperty,
@@ -51,6 +53,7 @@ from kivy.properties import (  # noqa # pylint: disable=no-name-in-module
     OptionProperty,
     StringProperty,
 )
+from kivy.resources import resource_add_path  # noqa
 from kivy.uix.boxlayout import BoxLayout  # noqa
 from kivy.uix.image import Image  # noqa
 from kivy.uix.label import Label  # noqa
@@ -86,6 +89,25 @@ from .welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
 VERSION = '0.1.3'
+
+# Add resource directory to Kivy Path for additional kv and image files
+DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+resource_add_path(DIR_PATH)
+
+# Load kv files
+kv_files = [
+    'about_screen.kv',
+    'app_settings_screen.kv',
+    'connection_profiles_screen.kv',
+    'vpn_settings_screen.kv',
+    'main_screen.kv',
+    'report_bug_screen.kv',
+    'welcome_screen.kv',
+    'widgets.kv',
+    'devclasses.kv',
+]
+for kv in kv_files:
+    Builder.load_file(os.path.join(DIR_PATH, kv))
 
 
 class ProtonVpnGui(ScreenManager, BoxLayout):
@@ -335,7 +357,7 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
     def check_current_cnxn(self, *dt):
         """Update connection info if change detected."""
         self.vpn_connected = self.is_connected()
-        # If VPN is connected:
+
         if self.vpn_connected:
             if self.connection_changed():
                 self.update_current_connection()
@@ -811,6 +833,7 @@ class ProtonVpnGuiApp(App):
 
     def build(self):
         """Instatiate the App class and return an instance to run."""
+
         self.title = 'ProtonVPN GUI'
         pvpn_gui = ProtonVpnGui()
         return pvpn_gui
