@@ -1,0 +1,189 @@
+#:kivy 1.10.1
+
+#    This file is part of ProtonVPN-CLI-GUI for Linux.
+
+#    Copyright (C) <year>  <name of author>
+#
+#    ProtonVPN-CLI-GUI is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+<VpnSettingsScreen>:
+    name: '_vpn_settings_screen_'
+    BoxLayout:
+        orientation: 'vertical'
+        PvpnScrollView:
+            id: vpn_settings_scrollview
+            pos: (0, 0)
+            bar_width: dp(10)
+            scroll_type: ['bars']
+            smooth_scroll_end: 10
+            PvpnGridLayout:
+                cols: 1
+                row_default_height: 80
+                padding: [50, 50, 50, 50]
+                Image:
+                    center: self.parent.center
+                    source: './images/protonvpn-logo-white.png'
+                    size_hint_y: 0.5
+                    pos_hint: {'center_x': 0.5, 'top': 1}
+                    padding: [0, 20]
+                DefaultTextInput:
+                    id: username
+                    hint_text: 'Username (OpenVPN)'
+                    size_hint_y: None
+                    height: 60
+                    padding: [0, 25, 0, 0]
+                    pos_hint: {'center_x': 0.5, 'top': 1}
+                GridLayout:
+                    cols: 2
+                    DefaultTextInput:
+                        id: password
+                        name: 'password'
+                        hint_text: 'Password (OpenVPN)'
+                        password: True
+                        password_mask: '•'
+                        size_hint_y: None
+                        height: 60
+                        padding: [0, 25, 0, 0]
+                    PvpnImageButton:
+                        id: password_show
+                        size_hint_x: 0.1
+                        source: './images/eye-show.png'
+                        on_release:
+                            root.show_password(root.ids.password)
+                            root.toggle_show_hide_password(self)
+                GridLayout:
+                    cols: 2
+                    padding: [0, 0, 0, 20]
+                    DefaultTextInput:
+                        id: password_confirm
+                        hint_text: 'Confirm Password'
+                        password: True
+                        password_mask: '•'
+                        size_hint_y: None
+                        height: 60
+                        padding: [0, 25, 0, 0]
+                        disabled: True
+                    PvpnImageButton:
+                        id: password_confirm_show
+                        size_hint_x: 0.1
+                        source: './images/eye-show-disabled.png'
+                        disabled: True
+                        on_release:
+                            root.show_password(root.ids.password_confirm)
+                            root.toggle_show_hide_password(self)
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Label:
+                        text: 'ProtonVPN Plan'
+                        font_size: 20
+                        text_size: self.size
+                        color: [166/255, 166/255, 166/255, 1]
+                        halign: 'left'
+                        valign: 'middle'
+                        size_hint_x: 0.85
+                    PvpnSpinner:
+                        id: pvpn_plan
+                        text: 'Basic'
+                        values: 'Free', 'Basic', 'Plus/Visionary'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Label:
+                        text: 'Default Protocol'
+                        font_size: 20
+                        text_size: self.size
+                        color: [166/255, 166/255, 166/255, 1]
+                        halign: 'left'
+                        valign: 'middle'
+                        size_hint_x: 0.85
+                    PvpnSpinner:
+                        id: default_protocol
+                        text: 'UDP'
+                        values: 'TCP', 'UDP'
+                GridLayout:
+                    id: dns_management
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+                    row_default_height: 80
+                    BackgroundBoxLayout:
+                        orientation: 'horizontal'
+                        height: self.minimum_height
+                        Label:
+                            id: dns_management_label
+                            text: 'DNS Management'
+                            font_size: 20
+                            text_size: self.size
+                            color: [166/255, 166/255, 166/255, 1]
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_x: 0.85
+                        PvpnSpinner:
+                            id: dns_spinner
+                            text: 'Enable Leak Protection'
+                            values:
+                                ['Enable Leak Protection', 'Custom DNS Servers', 'None']
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Label:
+                        text: 'Kill Switch'
+                        font_size: 20
+                        text_size: self.size
+                        color: [166/255, 166/255, 166/255, 1]
+                        halign: 'left'
+                        valign: 'middle'
+                        size_hint_x: 0.85
+                    PvpnSpinner:
+                        id: kill_switch
+                        name: '_kill_switch_'
+                        text: 'Disable'
+                        values: 'Enable - Allow LAN', 'Enable - Block LAN', 'Disable'
+                GridLayout:
+                    id: split_tunneling
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+                    row_default_height: 80
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        Label:
+                            text: 'Split Tunneling'
+                            font_size: 20
+                            text_size: self.size
+                            color: [166/255, 166/255, 166/255, 1]
+                            halign: 'left'
+                            valign: 'middle'
+                            size_hint_x: 0.85
+                        PvpnSpinner:
+                            id: split_tunneling_spinner
+                            name: '_split_tunneling_'
+                            text: 'Disable'
+                            values: 'Enable', 'Disable'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    padding: [0, 30, 0, 0]
+                    spacing: 20
+                    size_hint_y: None
+                    height: 100
+                    PvpnStandardButton:
+                        text: 'Close'
+                        on_release:
+                            root.close_button()
+                            app.title = 'ProtonVPN-GUI'
+                    PvpnStandardButton:
+                        id: update_button
+                        text: 'Update'
+                        disabled: True
+                        on_release:
+                            root.write_config()

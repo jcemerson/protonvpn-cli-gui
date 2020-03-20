@@ -1,0 +1,59 @@
+#:kivy 1.10.1
+
+#    This file is part of ProtonVPN-CLI-GUI for Linux.
+
+#    Copyright (C) <year>  <name of author>
+#
+#    ProtonVPN-CLI-GUI is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+<WelcomeScreen>:
+    name: '_welcome_screen_'
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: './images/swiss-alps-peak1.jpeg'
+    RelativeLayout:
+        orientation: 'vertical'
+        Image:
+            size: self.texture_size
+            pos_hint: {'x': 0, 'y': 0.35}
+            source: './images/protonvpn-logo-green.png'
+        Label:
+            text: 'SECURE INTERNET ANYWHERE'
+            font_size: 23
+            pos_hint: {'x': 0, 'y': 0.25}
+            font_color: [1, 1, 1, 1]
+        Label:
+            id: welcome_message
+            text: 'loading...'
+            font_size: 23
+            pos_hint: {'x': 0, 'y': 0}
+            font_color: [1, 1, 1, 1]
+        BoxLayout:
+            size_hint: 1, 0.075
+            padding: [15, 0, 15, 15]
+            Label:
+                id: pvpn_cli_version
+                text_size: self.size
+                halign: 'left'
+                font_size: 10
+                font_color: [1, 1, 1, 0.25]
+            Label:
+                id: pvpn_gui_verion
+                text_size: self.size
+                halign: 'right'
+                font_size: 10
+                font_color: [1, 1, 1, 0.25]

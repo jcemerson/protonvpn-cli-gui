@@ -1,2 +1,2 @@
 include README.md LICENSE
-include ProtonVPN-GUI/images/*
+include ProtonVPN-GUI/protonvpn_cli_gui/images

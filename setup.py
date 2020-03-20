@@ -11,7 +11,7 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
-from protonvpn_linux_gui.constants import VERSION as pvpngui_version
+from protonvpn_cli_gui.protonvpnguiapp import VERSION as pvpngui_version
 
 # Package meta-data.
 NAME = 'protonvpn-gui'
@@ -105,7 +105,7 @@ setup(
     ),
     entry_points={
         "console_scripts": [
-            "pvpn-gui = pvpngui.protonvpnguiapp:ProtonVpnGuiApp"
+            "protonvpn-cli-gui = protonvpn_cli_gui.protonvpnguiapp:ProtonVpnGuiApp"  # noqa
         ]
     },
     install_requires=REQUIRED,
