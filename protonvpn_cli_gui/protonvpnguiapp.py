@@ -835,5 +835,11 @@ class ProtonVpnGuiApp(App):
         """Instatiate the App class and return an instance to run."""
 
         self.title = 'ProtonVPN GUI'
-        pvpn_gui = ProtonVpnGui()
-        return pvpn_gui
+        self.protonvpn_gui = ProtonVpnGui()
+        return self.protonvpn_gui
+
+
+# Instantiate App class and run the app.
+def pvpn_gui():
+    pvpn_gui_app = ProtonVpnGuiApp()
+    return pvpn_gui_app.run()

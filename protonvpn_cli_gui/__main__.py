@@ -15,8 +15,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from protonvpnguiapp import ProtonVpnGuiApp  # pylint: disable=import-error
+from protonvpn_cli_gui.protonvpnguiapp import pvpn_gui
 
 # Instantiate top-level/root widget and run it.
 if __name__ == "__main__":
-    ProtonVpnGuiApp().run()
+    pvpn_gui()

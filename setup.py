@@ -105,7 +105,7 @@ setup(
     ),
     entry_points={
         "console_scripts": [
-            "protonvpn-cli-gui = protonvpn_cli_gui.protonvpnguiapp:ProtonVpnGuiApp.run"  # noqa
+            "protonvpn-cli-gui = protonvpn_cli_gui.protonvpnguiapp:pvpn_gui"
         ]
     },
     install_requires=REQUIRED,
