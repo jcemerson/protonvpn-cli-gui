@@ -10,7 +10,7 @@
   </a>
   <a href="https://pepy.tech/project/protonvpn-cli-gui">
     <img alt="Downloads" src="https://pepy.tech/badge/protonvpn-cli-gui">
-  </a>   
+  </a>
     <a href="https://pepy.tech/project/protonvpn-linux-cli-gui/week">
       <img alt="Downloads per Week" src="https://pepy.tech/badge/protonvpn-cli-gui/week">
     </a>
@@ -24,7 +24,7 @@
     </a>
     <a href="https://actions-badge.atrox.dev/jcemerson/protonvpn-cli-gui/goto?ref=testing">
         <img alt="Testing Branch Build Status" src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fjcemerson%2Fprotonvpn-cli-gui%2Fbadge%3Fref%3Dtesting&style=flat" />
-    </a> 
+    </a>
 </p>
 
 <h3 align="center">A GUI for <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b>ProtonVPN-CLI</b></a> on Linux *(Unofficial)*, written entirely in Python.</h3>
@@ -124,13 +124,14 @@ To create a desktop application launcher using a .desktop file:
     Categories=Network;VPN
     ```
     *Note: Be sure to update the Icon with your own path to an image file.*
-    
+
 
 
 ### This is a pre-release and not all planned features have been implemented.
 
 Some remaining features include:
 
+- Logging (GUI-only. Kivy, OpenVPN, and ProtonVPN-CLI all have logs of their own.)
 - Searchable Server List
 - Start on Boot
 - Connection Profiles (user-configurable connection profiles that can be saved, e.g. "Fastest TOR server with TCP connection", "Fastest P2P server in Iceland", etc.).
@@ -140,4 +141,3 @@ Some remaining features include:
 
 
 ## Screenshots
- 
