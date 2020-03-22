@@ -14,9 +14,9 @@ from setuptools import find_packages, setup, Command
 from protonvpn_cli_gui.protonvpnguiapp import VERSION as pvpngui_version
 
 # Package meta-data.
-NAME = 'protonvpn-gui'
+NAME = 'protonvpn-cli-gui'
 DESCRIPTION = 'An unofficial GUI for ProtonVPN on Linux.'
-URL = 'https://github.com/jcemerson/protonvpn-gui'
+URL = 'https://github.com/jcemerson/protonvpn-cli-gui'
 LICENSE = 'GPLv3'
 EMAIL = 'wutduk@pm.me'
 AUTHOR = 'WutDuk'

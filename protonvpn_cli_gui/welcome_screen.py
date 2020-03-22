@@ -52,7 +52,6 @@ class WelcomeScreen(Screen):
             # If the config directory does exist, check for required files.
             required_files = [
                 pvpncli_constants.CONFIG_FILE,
-                pvpncli_constants.OVPN_FILE,
                 pvpncli_constants.PASSFILE,
             ]
             try:

@@ -88,7 +88,7 @@ from .report_bug_screen import ReportBugScreen  # noqa
 from .welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
-VERSION = '0.1.6'
+VERSION = '0.1.7'
 
 # Add resource directory to Kivy Path for additional kv and image files
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -237,15 +237,20 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
                 except SystemExit:
                     print('Exception from update_current_connection(): SystemExit')  # noqa
                     print('reconnect cmd sent')
-                    self.exec_cmd('sudo protonvpn reconnect')
+                    self.exec_cmd('protonvpn reconnect')
 
             self.ids.main_screen.ids.exit_server_ip.text = f'IP: {ip}'
 
-            connected_server = pvpncli_utils.get_config_value(
-                "metadata",
-                "connected_server",
-            )
-            self.last_known_connection = connected_server
+            connected_server = None
+
+            try:
+                connected_server = pvpncli_utils.get_config_value(
+                    "metadata",
+                    "connected_server",
+                )
+                self.last_known_connection = connected_server
+            except KeyError:
+                self.last_known_connection = None
 
             # Set Secure Core switch if app newly initialized. Otherwise the
             # switch state is determined by User interaction afterwards.
@@ -376,20 +381,23 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
 
     def get_connection_time(self, dt):
         """Get duration of current connection."""
-        last_connection = pvpncli_utils.get_config_value(
-            "metadata",
-            "connected_time",
-        )
-        if self.vpn_connected:
-            connection_time = time() - int(last_connection)
-            hours, remainder = divmod(connection_time, 3600)
-            mins, secs = divmod(remainder, 60)
-            self.ids.main_screen.ids.connection_time.text = (
-                '{:02}:{:02}:{:02}'.format(int(hours), int(mins), int(secs))
+        try:
+            last_connection = pvpncli_utils.get_config_value(
+                "metadata",
+                "connected_time",
             )
-        else:
-            if self.ids.main_screen.ids.connection_time.text != '':
-                self.ids.main_screen.ids.connection_time.text = ''
+            if self.vpn_connected:
+                connection_time = time() - int(last_connection)
+                hours, remainder = divmod(connection_time, 3600)
+                mins, secs = divmod(remainder, 60)
+                self.ids.main_screen.ids.connection_time.text = (
+                    '{:02}:{:02}:{:02}'.format(int(hours), int(mins), int(secs))
+                )
+            else:
+                if self.ids.main_screen.ids.connection_time.text != '':
+                    self.ids.main_screen.ids.connection_time.text = ''
+        except KeyError:
+            self.ids.main_screen.ids.connection_time.text = ''
 
     def open_connecting_notification(self, cnxn):
         """Launch popup while a new connection attempt is in progress."""
@@ -735,7 +743,7 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
         protocol = self.default_protocol
         # If random is provided, connect to random server.
         if random:
-            cmd = f'sudo protonvpn c -r -p {protocol}'
+            cmd = f'protonvpn c -r -p {protocol}'
             cnxn = 'a random server'
         # If country provided, connect to fastest server in that country.
         if country:
@@ -746,22 +754,22 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
                 return
             else:
                 cc = self.get_country_code(country)
-                cmd = f'sudo protonvpn connect --cc {cc} -p {protocol}'
+                cmd = f'protonvpn connect --cc {cc} -p {protocol}'
                 cnxn = f'the fastest server in {country}'
         # If server name provided, connect to that server.
         if server_name:
-            cmd = f'sudo protonvpn c {server_name} -p {protocol}'
+            cmd = f'protonvpn c {server_name} -p {protocol}'
             cnxn = f'server {server_name}'
         # If neither country or server name provided, connect to fastest server. # noqa
         if not country and not server_name and not random:
-            cmd = f'sudo protonvpn c -f -p {protocol}'
+            cmd = f'protonvpn c -f -p {protocol}'
             cnxn = 'the fastest server'
         self.open_connecting_notification(cnxn)
         Clock.schedule_once(partial(self.exec_cmd, cmd), 0.1)
 
     def disconnect(self, *dt):
         """Call exec_cmd to disconnect vpn."""
-        cmd = 'sudo protonvpn d'
+        cmd = 'protonvpn d'
         self.open_disconnecting_notification()
         self.exec_cmd(cmd)
 
@@ -777,7 +785,7 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
 
         country_code = self.get_country_code(country)
 
-        self.exec_cmd('sudo protonvpn d')
+        self.exec_cmd('protonvpn d')
         pvpncli_utils.pull_server_data(force=True)
 
         servers = pvpncli_utils.get_servers()
@@ -790,7 +798,7 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
                 server_pool.append(server)
 
         fastest_server = pvpncli_utils.get_fastest_server(server_pool)
-        cmd = f'sudo protonvpn c {fastest_server} -p {protocol}'
+        cmd = f'protonvpn c {fastest_server} -p {protocol}'
         Clock.schedule_once(partial(self.exec_cmd, cmd), 0.1)
 
     def do_quickconnect_or_disconnect(self, *args):
@@ -798,10 +806,10 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
             self.disconnect()
         else:
             if self.secure_core.state == 'down':
-                cmd = 'sudo protonvpn connect --sc'
+                cmd = 'protonvpn connect --sc'
                 cnxn = 'the fastest Secure Core server...'
             else:
-                cmd = 'sudo protonvpn connect --fastest'
+                cmd = 'protonvpn connect --fastest'
                 cnxn = 'the fastest server...'
             self.open_connecting_notification(cnxn)
             Clock.schedule_once(partial(self.exec_cmd, cmd), 0.1)

@@ -168,19 +168,19 @@ class VpnSettingsScreen(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # Schedule remainder of init with delay to allow app to fully start.
+        # This avoids error referencing App instance before it's ready.
+        Clock.schedule_once(self.after_init)
+
+    def after_init(self, dt):
         # Determine if profile has already been initialized
         try:
             self.is_initialized = (
                 int(pvpncli_utils.get_config_value("USER", "initialized"))
             )
         except KeyError:
-            self.is_initialized = 0
+            self.is_initialized = None
 
-        # Schedule remainder of init with delay to allow app to fully start.
-        # This avoids error referencing App instance before it's ready.
-        Clock.schedule_once(self.after_init)
-
-    def after_init(self, dt):
         # Get app reference
         self.app = App.get_running_app()
 
@@ -261,13 +261,32 @@ class VpnSettingsScreen(Screen):
         if self.is_initialized:
             self.get_current_values()
             self.set_current_values()
+        else:
+            if self.is_initialized is None:
+                # Create directory if not already there.
+                if not os.path.isdir(pvpncli_constants.CONFIG_DIR):
+                    os.mkdir(pvpncli_constants.CONFIG_DIR)
+                    pvpncli_logger.logger.debug("Config Directory created")
+                    pvpncli_utils.change_file_owner(
+                        pvpncli_constants.CONFIG_DIR
+                    )
+                # Initialize config file.
+                self.init_config_file()
+                # Create OpenVPN template.
+                pvpncli_utils.make_ovpn_template()
+            # Set values to detect updates
+            self.username_val = self.username.text
+            self.passwd_val = self.password.text
+            self.tier_val = self.pvpn_plan.text
+            self.prot_val = self.default_protocol.text
+            self.dns_val = self.dns_selection.text
+            self.dns_ip_val = self.dns_server_list.text
+            self.kill_switch_val = self.kill_switch.text
+            self.split_tunl_val = self.split_tunneling_spinner.text
+            self.split_tunnel_ips = self.split_tunneling_ip_list.text
 
         # Set bindings:
         self.password.bind(text=self.enable_confirm_password)
-        # self.password_confirm.bind(
-        #     on_text_validate=self.confirm_password_match
-        # )
-        # self.password_confirm.bind(focus=self.on_focus)
         self.password_confirm.bind(disabled=self.show_password_confirm_disable)
         self.dns_selection.bind(text=self.configure_dns_servers)
         self.kill_switch.bind(text=partial(
@@ -294,7 +313,7 @@ class VpnSettingsScreen(Screen):
         # Username
         self.username_val = pvpncli_utils.get_config_value("USER", "username")
         # Password
-        cmd = f'sudo /bin/cat {pvpncli_constants.PASSFILE}'
+        cmd = f'/bin/cat {pvpncli_constants.PASSFILE}'
         user_passwd = subprocess.check_output(cmd, shell=True).decode()
         self.usr_val, self.passwd_val = user_passwd.split()
         # ProtonVPN Plan/Tier
@@ -446,15 +465,6 @@ class VpnSettingsScreen(Screen):
             else:
                 return True
 
-    # def reset_focus(self, instance, dt):
-    #     """Called via Clock with delay to prevent KeyError reseting focus."""
-    #     instance.focus = True
-
-    # def on_focus(self, instance, focused):
-    #     """Called upon a keyboard focus event."""
-    #     if not focused:
-    #         self.confirm_password_match()
-
     def configure_dns_servers(self, *args):
         """If Configure DNS Servers is selected, open text-input field."""
         if self.dns_selection.text == 'Custom DNS Servers':
@@ -593,7 +603,6 @@ class VpnSettingsScreen(Screen):
 
     def set_split_tunnel(self):
         """Enable or disable split tunneling"""
-
         with open(pvpncli_constants.SPLIT_TUNNEL_FILE, "a") as f:
             f.write(f'\n{self.split_tunneling_ip_list.text}')
 
@@ -612,34 +621,33 @@ class VpnSettingsScreen(Screen):
     def updates_made(self):
         """Compare current to initial values to determine if updates made."""
         updates = []
-        if self.is_initialized:
-            if self.password.text != self.passwd_val:
-                updates.append('userpass')
-            else:
-                if self.username.text != self.username_val:
-                    updates.append('username')
-            if self.pvpn_plan.text != self.tier_val:
-                updates.append('plan')
-            if self.default_protocol.text != self.prot_val:
-                updates.append('protocol')
-            if self.dns_selection.text != self.dns_val:
-                updates.append('dns_mgmt'),
-            if self.dns_selection == 'Custom DNS Servers':
-                if self.dns_server_list.text != self.dns_ip_val:
-                    updates.append('custom_dns')
-            if self.kill_switch.text != self.kill_switch_val:
-                updates.append('killswitch'),
-            if self.split_tunneling_spinner.text != self.split_tunl_val:
-                updates.append('split_tunnel')
-            if self.split_tunneling_ip_list.text != self.split_tunnel_ips:
-                updates.append('split_tunnel_ip')
-            return updates
+        # if self.is_initialized:
+        if self.password.text != self.passwd_val:
+            updates.append('userpass')
+        else:
+            if self.username.text != self.username_val:
+                updates.append('username')
+        if self.pvpn_plan.text != self.tier_val:
+            updates.append('plan')
+        if self.default_protocol.text != self.prot_val:
+            updates.append('protocol')
+        if self.dns_selection.text != self.dns_val:
+            updates.append('dns_mgmt'),
+        if self.dns_selection == 'Custom DNS Servers':
+            if self.dns_server_list.text != self.dns_ip_val:
+                updates.append('custom_dns')
+        if self.kill_switch.text != self.kill_switch_val:
+            updates.append('killswitch'),
+        if self.split_tunneling_spinner.text != self.split_tunl_val:
+            updates.append('split_tunnel')
+        if self.split_tunneling_ip_list.text != self.split_tunnel_ips:
+            updates.append('split_tunnel_ip')
+        return updates
 
     def write_config(self):
         """Write profile info to pvpn-cli config file and init ovpn files."""
         update_calls = {
-            # "userpass": self.set_username_password(),
-            "userpass": self.set_username_password,
+            "userpass": self.set_username_password(),
             "username": self.set_config_value(
                 "USER",
                 "username",
@@ -685,18 +693,26 @@ class VpnSettingsScreen(Screen):
                     ]),
             ),
         }
-        # If profile already initialized, update profile as needed.
-        if self.is_initialized:
-            if not self.missing_required_fields():
-                if self.confirm_password_match():
-                    updates = self.updates_made()
-                    for update in updates:
-                        update_calls[update]
-                    # Reset current values for detecting updates.
-                    self.get_current_values()
-                    # Reset update button to disabled.
-                    self.update_button.disabled = True  # noqa
 
+        if not self.missing_required_fields():
+            if self.confirm_password_match():
+                updates = self.updates_made()
+                for update in updates:
+                    update_calls[update]
+
+                # Reset current values for detecting updates.
+                self.get_current_values()
+
+                # Reset update button to disabled.
+                self.update_button.disabled = True  # noqa
+
+                # Mark prfofile as initialized
+                if not self.is_initialized:
+                    self.set_config_value("USER", "initialized", 1)
+                    self.is_initialized = 1
+                    self.app.root.initialize_application()
+                # Check for active connection and notify to reconnect
+                try:
                     if self.app.root.vpn_connected:
                         self.vpn_settings_update_popup = PvpnPopup(
                             title='Attention!',
@@ -715,21 +731,7 @@ class VpnSettingsScreen(Screen):
                         self.vpn_settings_update_popup.add_widget(
                             self.vpn_settings_update_label
                         )
-                    self.vpn_settings_update_popup.open()
-        # Else, if profile not initialized, initialize it.
-        else:
-            # Create directory if not already there.
-            if not os.path.isdir(pvpncli_constants.CONFIG_DIR):
-                os.mkdir(pvpncli_constants.CONFIG_DIR)
-                pvpncli_logger.logger.debug("Config Directory created")
-                pvpncli_utils.change_file_owner(pvpncli_constants.CONFIG_DIR)
-                # Initialize config file.
-                self.init_config_file()
-                # Create OpenVPN template.
-                pvpncli_utils.make_ovpn_template()
-                # Update config file is GUI values.
-                for call in update_calls.values():
-                    call
-                # Set config as initialized.
-                self.set_config_value("USER", "initialized", 1)
-                pvpncli_logger.logger.debug("Initialization completed.")
+                        self.vpn_settings_update_popup.open()
+                except AttributeError:
+                    # If vpn_connected doesn't exist, open main screen
+                    pass
