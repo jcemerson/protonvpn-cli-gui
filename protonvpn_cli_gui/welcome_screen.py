@@ -30,24 +30,25 @@ from protonvpn_cli import constants as pvpncli_constants
 class WelcomeScreen(Screen):
     """Intro screen. Check for profile & connect or request authentication."""
 
-    USER = 'wutduk'
-    CONFIG_DIR = os.path.join(os.path.expanduser("~{0}".format(USER)), ".pvpn_gui_testing")  # noqa
-    CONFIG_FILE = os.path.join(CONFIG_DIR, "pvpn-gui.cfg")
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def on_enter(self):
         """Run upon screenload and call subsequent method."""
+        app = App.get_running_app()
+
+        # Check for update:
+        print("calling app.check_update")
+        app.check_update()
         Clock.schedule_once(self.verify_login_credentials)
 
     def verify_login_credentials(self, dt):
         """Confirm required files for connecting exist, else initialize."""
-        app_root = App.get_running_app().root
+        app = App.get_running_app()
         # If the config directory doesn't exist, start initialization.
         if not os.path.isdir(pvpncli_constants.CONFIG_DIR):
             # load profile initialization process
-            Clock.schedule_once(app_root.initialize_vpn_settings, 3)
+            Clock.schedule_once(app.root.initialize_vpn_settings, 3)
         else:
             # If the config directory does exist, check for required files.
             required_files = [
@@ -69,10 +70,10 @@ class WelcomeScreen(Screen):
                         break
                 if required_files_found == len(required_files):
                     # print('Required files found, starting app.')
-                    Clock.schedule_once(app_root.close_welcome_screen) # noqa
+                    Clock.schedule_once(app.root.close_welcome_screen) # noqa
                     # load connection and populate status messages on screen # noqa
                 else:
                     # load profile inititalization screen
-                    Clock.schedule_once(app_root.initialize_vpn_settings, 3) # noqa
+                    Clock.schedule_once(app.root.initialize_vpn_settings, 3) # noqa
             except Exception as e:
                 print('Exception from verify_login_credentials: ', e)
