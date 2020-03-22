@@ -33,11 +33,12 @@ Config.set('input', 'mouse', 'mouse,disable_on_activity')
 Config.set('graphics', 'window_state', 'visible')
 Config.set('kivy', 'desktop', '1')
 Config.set('kivy', 'exit_on_escape', '0')
-Config.set('kivy', 'window_icon', './images/protonvpn-sign-white.png')
+Config.set('kivy', 'window_icon', '/usr/local/lib/python3.6/dist-packages/protonvpn_cli_gui/protonvpn.ico')
 
 # Standard Libraries
 from functools import partial  # noqa
 import os  # noqa
+import requests  # noqa
 import subprocess  # noqa
 from time import time  # noqa
 
@@ -88,7 +89,7 @@ from .report_bug_screen import ReportBugScreen  # noqa
 from .welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
-VERSION = '0.1.7'
+VERSION = '0.1.8'
 
 # Add resource directory to Kivy Path for additional kv and image files
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -130,12 +131,12 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
         welcome_screen = self.ids.welcome_screen
         protonvpn_cli_version = f'ProtonVPN-CLI v{pvpncli_constants.VERSION}'
         welcome_screen.ids.pvpn_cli_version.text = protonvpn_cli_version
-        welcome_screen.ids.pvpn_gui_verion.text =  f'ProtonVPN-GUI v{VERSION}'
+        welcome_screen.ids.pvpn_gui_verion.text = f'ProtonVPN-CLI-GUI v{VERSION}'  # noqa
 
     def open_exit_popup(self):
         """Open Exit Popup to confirm exiting the application."""
         self.exit_popup = ExitPopup(
-            title='Exit ProtonVPN-GUI?',
+            title='Exit ProtonVPN-CLI-GUI?',
             label_text="Are you sure you wish to exit the application?",
             auto_close=False,
         )
@@ -391,7 +392,7 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
                 hours, remainder = divmod(connection_time, 3600)
                 mins, secs = divmod(remainder, 60)
                 self.ids.main_screen.ids.connection_time.text = (
-                    '{:02}:{:02}:{:02}'.format(int(hours), int(mins), int(secs))
+                    '{:02}:{:02}:{:02}'.format(int(hours), int(mins), int(secs))  # noqa
                 )
             else:
                 if self.ids.main_screen.ids.connection_time.text != '':
@@ -845,6 +846,95 @@ class ProtonVpnGuiApp(App):
         self.title = 'ProtonVPN GUI'
         self.protonvpn_gui = ProtonVpnGui()
         return self.protonvpn_gui
+
+    def get_latest_version(self):
+        """Return the latest version from pypi"""
+        pvpncli_logger.logger.debug("Calling pypi API")
+        try:
+            r = requests.get("https://pypi.org/pypi/protonvpn-cli-gui/json")
+        except (requests.exceptions.ConnectionError,
+                requests.exceptions.ConnectTimeout):
+            pvpncli_logger.logger.debug("Couldn't connect to pypi API")
+            return False
+        try:
+            r.raise_for_status()
+        except requests.exceptions.HTTPError:
+            pvpncli_logger.logger.debug(
+                "HTTP Error with pypi API: {0}".format(r.status_code)
+            )
+            return False
+
+        release = r.json()["info"]["version"]
+        return release
+
+    def check_update(self):
+        """Return the download URL if Update is available, False otherwise"""
+        # Determine if an update check should be run
+        check_interval = int(pvpncli_utils.get_config_value(
+            "USER", "check_update_interval"
+        ))
+        check_interval = check_interval * 24 * 3600
+        last_check = int(pvpncli_utils.get_config_value(
+            "metadata", "last_update_check"
+        ))
+
+        if (last_check + check_interval) >= time():
+            # Don't check for update
+            return
+
+        pvpncli_logger.logger.debug("Checking for new update")
+        current_version = list(VERSION.split("."))
+        current_version = [int(i) for i in current_version]
+        pvpncli_logger.logger.debug(f"Current: {current_version}")
+
+        latest_version = self.get_latest_version()
+        if not latest_version:
+            # Skip if get_latest_version() ran into errors
+            return
+
+        latest_version = latest_version.split(".")
+        latest_version = [int(i) for i in latest_version]
+        pvpncli_logger.logger.debug(f"Latest: {latest_version}")
+
+        for idx, i in enumerate(latest_version):
+            if i > current_version[idx]:
+                pvpncli_logger.logger.debug("Update found")
+                update_available = True
+                break
+            elif i < current_version[idx]:
+                pvpncli_logger.logger.debug("No update")
+                update_available = False
+                break
+        else:
+            pvpncli_logger.logger.debug("No update")
+            update_available = False
+
+        pvpncli_utils.set_config_value(
+            "metadata",
+            "last_update_check",
+            int(time())
+        )
+
+        if update_available:
+            latest_version = '.'.join([str(x) for x in latest_version])
+            update_available_popup = PvpnPopup(
+                title='Update Available!',
+                label_text=(
+                    f"protonvpn-cli-gui v{latest_version} is now available."
+                ),
+                dt=5,
+            )
+            update_available_popup_label = PvpnPopupLabel(
+                text=update_available_popup.label_text,
+                text_size=(400, 400),
+            )
+            update_available_popup.add_widget(
+                update_available_popup_label
+            )
+            Clock.schedule_once(
+                update_available_popup.open,
+                1,
+            )
 
 
 # Instantiate App class and run the app.
