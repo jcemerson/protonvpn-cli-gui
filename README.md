@@ -10,24 +10,14 @@
   </a>
   <a href="https://pepy.tech/project/protonvpn-cli-gui">
     <img alt="Downloads" src="https://pepy.tech/badge/protonvpn-cli-gui">
-  </a>
-    <a href="https://pepy.tech/project/protonvpn-linux-cli-gui/week">
-      <img alt="Downloads per Week" src="https://pepy.tech/badge/protonvpn-cli-gui/week">
-    </a>
 </p>
 <p align="center">
-    <a href="https://actions-badge.atrox.dev/jcemerson/protonvpn-cli-gui/goto?ref=master">
-        <img alt="Master Branch Build Status" src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%jcemerson%2Fprotonvpn-cli-gui%2Fbadge%3Fref%3Dmaster&style=flat" />
-    </a>
     <a href="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/LICENSE">
         <img src="https://img.shields.io/github/license/jcemerson/protonvpn-cli-gui">
     </a>
-    <a href="https://actions-badge.atrox.dev/jcemerson/protonvpn-cli-gui/goto?ref=testing">
-        <img alt="Testing Branch Build Status" src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fjcemerson%2Fprotonvpn-cli-gui%2Fbadge%3Fref%3Dtesting&style=flat" />
-    </a>
 </p>
 
-<h3 align="center">A GUI for <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b>ProtonVPN-CLI</b></a> on Linux *(Unofficial)*, written entirely in Python.</h3>
+<h3 align="center">A GUI for <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b>ProtonVPN-CLI</b></a> on Linux (Unofficial), written entirely in Python.</h3>
 
 ProtonVPN-CLI-GUI is <a href="https://github.com/kivy/kivy"><b>Kivy</b></a>-based GUI built on top of <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b>protonvpn-cli-ng</b></a> as the back-end. Wherever possible, the GUI relies on the actual code of the CLI, so ProtonVPN-CLI-GUI will remain up to date with <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b>ProtonVPN-CLI</b></a>.
 
@@ -141,3 +131,27 @@ Some remaining features include:
 
 
 ## Screenshots
+
+<p align="center">
+  <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/protonvpn_cli_gui/images/Screenshot%20from%202020-03-22%2020-25-10.png" alt="Main Screen"></img>
+</p>
+
+<p align="center">
+  <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/protonvpn_cli_gui/images/Screenshot%20from%202020-03-22%2020-27-33.png" alt="Secure Core Notification"></img>
+</p>
+
+<p align="center">
+  <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/protonvpn_cli_gui/images/Screenshot%20from%202020-03-22%2020-27-52.png" alt="Disconnected"></img>
+</p>
+
+<p align="center">
+  <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/protonvpn_cli_gui/images/Screenshot%20from%202020-03-22%2020-28-47.png" alt="Secure Core"></img>
+</p>
+
+<p align="center">
+  <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/protonvpn_cli_gui/images/Screenshot%20from%202020-03-22%2020-29-27.png" alt="Menu"></img>
+</p>
+
+<p align="center">
+  <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/protonvpn_cli_gui/images/Screenshot%20from%202020-03-22%2020-30-00.png" alt="VPN Settings"></img>
+</p>
