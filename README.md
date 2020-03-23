@@ -47,11 +47,10 @@ For more detailed information on installing, updating and uninstalling, please v
 |OpenSUSE/SLES                            | `sudo zypper in -y openvpn dialog python3-pip python3-setuptools`  |
 |Arch Linux/Manjaro                       | `sudo pacman -S openvpn dialog python-pip python-setuptools`       |
 
-*Note: This has only been tested on Linux Mint 19.3 Cinnamon.*
-
 
 Once you've installed <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b>protonvpn-cli-ng</b></a>, install <b>ProtonVPN-CLI-GUI</b>.
 
+*Note: This has only been tested on Linux Mint 19.3 Cinnamon.*
 
 
 ## Installing ProtonVPN-CLI-GUI
