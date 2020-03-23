@@ -5,16 +5,19 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/jcemerson/protonvpn-cli-gui/releases/latest">
-      <img alt="Build Status" src="https://img.shields.io/github/release/jcemerson/protonvpn-cli-gui.svg?style=flat" />
-  </a>
-  <a href="https://pepy.tech/project/protonvpn-cli-gui">
-    <img alt="Downloads" src="https://pepy.tech/badge/protonvpn-cli-gui">
+  <img src="https://img.shields.io/github/v/release/jcemerson/protonvpn-cli-gui?include_prereleases&style=flat-square" alt="GitHub Downloads"></img>
 </p>
 <p align="center">
-    <a href="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/LICENSE">
-        <img src="https://img.shields.io/github/license/jcemerson/protonvpn-cli-gui">
+    <a href="https://pepy.tech/project/protonvpn-cli-gui">
+      <img alt="Downloads per Week" src="https://pepy.tech/badge/protonvpn-cli-gui">
     </a>
+  <img src="https://img.shields.io/pypi/dm/protonvpn-cli-gui?style=flat-square" alt="PyPi Downloads"></img>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/pypi/pyversions/protonvpn-cli-gui?style=flat-square" alt="Python Versions"></img>
+  <img src="https://img.shields.io/pypi/wheel/protonvpn-cli-gui?style=flat-square" alt="Wheel"></img>
+  <img src="https://img.shields.io/pypi/l/protonvpn-cli-gui?style=flat-square" alt="License"></img>
 </p>
 
 <h3 align="center">A GUI for <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b>ProtonVPN-CLI</b></a> on Linux (Unofficial), written entirely in Python.</h3>
