@@ -153,8 +153,8 @@ class VpnSettingsScreen(Screen):
     }
     dns_management_options = {
         'Enable Leak Protection': 1,
-        'Custom DNS Servers': 2,
-        'None': 3,
+        'Custom DNS Servers': 0,
+        'None': 0,
     }
     kill_switch_options = {
         'Disable': 0,
@@ -328,18 +328,27 @@ class VpnSettingsScreen(Screen):
         )
         self.prot_val = self.prot_val.upper()
         # DNS Management
-        self.dns_val = int(pvpncli_utils.get_config_value(
-            "USER",
-            "dns_leak_protection"
-        ))
-        for opt, val in self.dns_management_options.items():
-            if val == self.dns_val:
-                self.dns_val = opt
-
+        # Check for custom_dns values.
         self.dns_ip_val = pvpncli_utils.get_config_value(
             "USER",
             "custom_dns"
         )
+        # Determine selection for dns_leak_protection
+        self.dns_val = int(pvpncli_utils.get_config_value(
+            "USER",
+            "dns_leak_protection"
+        ))
+        # If config dns_leak_protection is 0, determine if there's a
+        # custom_dns value or not. If yes, set to 'Custom DNS Server'
+        # else, set to "None".
+        if self.dns_val == 0:
+            if self.dns_ip_val != 'None':
+                self.dns_val = 'Custom DNS Servers'
+            else:
+                self.dns_val = 'None'
+        else:
+            self.dns_val = 'Enable Leak Protection'
+
         # Kill Switch
         self.kill_switch_val = int(pvpncli_utils.get_config_value(
             "USER",
@@ -632,12 +641,12 @@ class VpnSettingsScreen(Screen):
         if self.default_protocol.text != self.prot_val:
             updates.append('protocol')
         if self.dns_selection.text != self.dns_val:
-            updates.append('dns_mgmt'),
+            updates.append('dns_mgmt')
         if self.dns_selection == 'Custom DNS Servers':
             if self.dns_server_list.text != self.dns_ip_val:
                 updates.append('custom_dns')
         if self.kill_switch.text != self.kill_switch_val:
-            updates.append('killswitch'),
+            updates.append('killswitch')
         if self.split_tunneling_spinner.text != self.split_tunl_val:
             updates.append('split_tunnel')
         if self.split_tunneling_ip_list.text != self.split_tunnel_ips:
@@ -646,6 +655,13 @@ class VpnSettingsScreen(Screen):
 
     def write_config(self):
         """Write profile info to pvpn-cli config file and init ovpn files."""
+
+        # Set custom_dns value for pvpn-cli.cfg
+        if str(self.dns_server_list.text) == '':
+            custom_dns_ips = None
+        else:
+            custom_dns_ips = str(self.dns_server_list.text)
+
         update_calls = {
             "userpass": self.set_username_password(),
             "username": self.set_config_value(
@@ -671,7 +687,7 @@ class VpnSettingsScreen(Screen):
             "custom_dns": self.set_config_value(
                 "USER",
                 "custom_dns",
-                str(self.dns_server_list.text),
+                custom_dns_ips,
             ),
             "killswitch": self.set_config_value(
                 "USER",
@@ -706,7 +722,7 @@ class VpnSettingsScreen(Screen):
                 # Reset update button to disabled.
                 self.update_button.disabled = True  # noqa
 
-                # Mark prfofile as initialized
+                # Mark profile as initialized
                 if not self.is_initialized:
                     self.set_config_value("USER", "initialized", 1)
                     self.is_initialized = 1
