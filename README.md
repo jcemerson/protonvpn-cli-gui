@@ -1,7 +1,7 @@
 <h1 align="center">ProtonVPN-CLI-GUI</h1>
 
 <p align="center">
-  <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/package/protonvpn_cli_gui/images/protonvpn-wallpaper-7.jpg" alt="ProtonVPN"></img>
+  <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/protonvpn_cli_gui/images/protonvpn-wallpaper-7.jpg" alt="ProtonVPN"></img>
 </p>
 
 <p align="center">
