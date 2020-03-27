@@ -776,7 +776,9 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
 
     def fastest_sc_by_country(self, country, protocol=None):
         """Connect to the fastest Secure Core server in a specific country."""
-        pvpncli_logger.logger.debug("Starting fastest SC country connect")
+        pvpncli_logger.logger.debug(
+            f"Starting fastest SC connection in {country}"
+        )
 
         if not protocol:
             protocol = pvpncli_utils.get_config_value(
@@ -786,7 +788,6 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
 
         country_code = self.get_country_code(country)
 
-        self.exec_cmd('protonvpn d')
         pvpncli_utils.pull_server_data(force=True)
 
         servers = pvpncli_utils.get_servers()
@@ -802,6 +803,54 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
         cmd = f'protonvpn c {fastest_server} -p {protocol}'
         Clock.schedule_once(partial(self.exec_cmd, cmd), 0.1)
 
+    def fastest_plus_server(self, country=None, protocol=None):
+        """Connect to the fastest Plus server in a specific country."""
+        pvpncli_logger.logger.debug("Starting fastest Plus connection")
+
+        if not protocol:
+            protocol = pvpncli_utils.get_config_value(
+                "USER",
+                "default_protocol"
+            )
+
+        if country:
+            country_code = self.get_country_code(country)
+            cnxn = f'the fastest Plus server in {country_code}...'
+        else:
+            country_code = country
+            cnxn = 'the fastest Plus server...'
+
+        self.open_connecting_notification(cnxn)
+
+        pvpncli_utils.pull_server_data(force=True)
+
+        servers = pvpncli_utils.get_servers()
+
+        # Account for Secure Core servers.
+        if self.secure_core.state == 'down':
+            for i, server in enumerate(servers):
+                if server["Features"] != 1:
+                    servers.pop(i)
+        else:
+            for i, server in enumerate(servers):
+                if server["Features"] == 1:
+                    servers.pop(i)
+
+        server_pool = []
+        if country_code:
+            for server in servers:
+                if server["Tier"] == 2 and \
+                   server["ExitCountry"] == country_code:
+                    server_pool.append(server)
+        else:
+            for server in servers:
+                if server["Tier"] == 2:
+                    server_pool.append(server)
+
+        fastest_server = pvpncli_utils.get_fastest_server(server_pool)
+        cmd = f'protonvpn c {fastest_server} -p {protocol}'
+        Clock.schedule_once(partial(self.exec_cmd, cmd), 0.1)
+
     def do_quickconnect_or_disconnect(self, *args):
         if self.vpn_connected:
             self.disconnect()
@@ -810,9 +859,10 @@ class ProtonVpnGui(ScreenManager, BoxLayout):
                 cmd = 'protonvpn connect --sc'
                 cnxn = 'the fastest Secure Core server...'
             else:
-                cmd = 'protonvpn connect --fastest'
-                cnxn = 'the fastest server...'
+                # cmd = 'protonvpn connect --fastest'
+                cnxn = 'the fastest Plus server...'
             self.open_connecting_notification(cnxn)
+            # self.fastest_plus_server()
             Clock.schedule_once(partial(self.exec_cmd, cmd), 0.1)
 
     def show_window(self):
