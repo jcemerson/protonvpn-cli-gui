@@ -1,0 +1,36 @@
+#:kivy 1.10.1
+
+#:import Clock kivy.clock.Clock
+#:import Window kivy.core.window
+#:import CardTransition kivy.uix.screenmanager.CardTransition
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import FallOutTransition kivy.uix.screenmanager.FallOutTransition
+#:import NoTransition kivy.uix.screenmanager.NoTransition
+#:import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
+#:import SwapTransition kivy.uix.screenmanager.SwapTransition
+#:import WipeTransition kivy.uix.screenmanager.WipeTransition
+#:import Spinner kivy.uix.spinner
+
+
+<ProtonVpnGui>:
+    canvas.before:
+        Color:
+            rgba: [42/255, 42/255, 53/255, 1]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    WelcomeScreen:
+        id: welcome_screen
+    MainScreen:
+        id: main_screen
+    AboutScreen:
+        id: about_screen
+    VpnSettingsScreen:
+        id: vpn_settings_screen
+    AppSettingsScreen:
+        id: app_settings_screen
+    ConnectionProfilesScreen:
+        id: connect_profiles_screen
+    ReportBugScreen:
+        id: report_bug_screen

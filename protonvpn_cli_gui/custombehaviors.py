@@ -191,7 +191,7 @@ class HoverBehavior(object):
         else:
             self.dispatch('on_leave')  # noqa # pylint: disable=no-member
 
-    def on_enter(self):
+    def on_enter(self, *args):
         pass
 
     def on_leave(self):

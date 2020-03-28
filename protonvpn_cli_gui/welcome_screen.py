@@ -21,14 +21,7 @@ import os
 # Kivy Libraries
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.properties import (  # noqa # pylint: disable=no-name-in-module
-    AliasProperty,
-    BooleanProperty,
-    ObjectProperty,
-    OptionProperty,
-    StringProperty
-)
-from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import Screen  # , CardTransition, NoTransition
 
 # protonvpn-cli-ng Functions
 from protonvpn_cli import constants as pvpncli_constants
@@ -37,22 +30,29 @@ from protonvpn_cli import constants as pvpncli_constants
 class WelcomeScreen(Screen):
     """Intro screen. Check for profile & connect or request authentication."""
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def on_enter(self):
         """Run upon screenload and call subsequent method."""
+        app = App.get_running_app()
+
+        # Check for update:
+        print("calling app.check_update")
+        app.check_update()
         Clock.schedule_once(self.verify_login_credentials)
 
     def verify_login_credentials(self, dt):
         """Confirm required files for connecting exist, else initialize."""
-        app_root = App.get_running_app().root
+        app = App.get_running_app()
         # If the config directory doesn't exist, start initialization.
         if not os.path.isdir(pvpncli_constants.CONFIG_DIR):
             # load profile initialization process
-            Clock.schedule_once(app_root.initialize_profile)
+            Clock.schedule_once(app.root.initialize_vpn_settings, 3)
         else:
             # If the config directory does exist, check for required files.
             required_files = [
                 pvpncli_constants.CONFIG_FILE,
-                pvpncli_constants.OVPN_FILE,
                 pvpncli_constants.PASSFILE,
             ]
             try:
@@ -70,20 +70,10 @@ class WelcomeScreen(Screen):
                         break
                 if required_files_found == len(required_files):
                     # print('Required files found, starting app.')
-                    Clock.schedule_once(app_root.close_welcome_screen) # noqa
+                    Clock.schedule_once(app.root.close_welcome_screen) # noqa
                     # load connection and populate status messages on screen # noqa
                 else:
                     # load profile inititalization screen
-                    Clock.schedule_once(app_root.initialize_profile) # noqa
+                    Clock.schedule_once(app.root.initialize_vpn_settings, 3) # noqa
             except Exception as e:
                 print('Exception from verify_login_credentials: ', e)
-
-
-class InitializeProfileScreen(Screen):
-    """Create profile for VPN connection."""
-    pass
-
-
-class MainScreen(Screen):
-    """Primary screen where most app usage takes place."""
-    pass

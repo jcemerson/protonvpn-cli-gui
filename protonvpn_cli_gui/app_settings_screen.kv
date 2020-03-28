@@ -1,0 +1,150 @@
+#:kivy 1.10.1
+
+#    This file is part of ProtonVPN-CLI-GUI for Linux.
+
+#    Copyright (C) <year>  <name of author>
+#
+#    ProtonVPN-CLI-GUI is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+<AppSettingsScreen>:
+    name: '_app_settings_screen_'
+    BoxLayout:
+        orientation: 'vertical'
+        PvpnScrollView:
+            id: app_settings_scrollview
+            pos: (0, 0)
+            bar_width: dp(10)
+            scroll_type: ['bars']
+            smooth_scroll_end: 10
+            PvpnGridLayout:
+                cols: 1
+                row_default_height: 80
+                padding: [50, 50, 50, 50]
+                Image:
+                    center: self.parent.center
+                    source: './images/protonvpn-logo-white.png'
+                    size_hint_y: 0.5
+                    pos_hint: {'center_x': 0.5, 'top': 1}
+                    padding: [0, 20]
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 50
+                    Label:
+                        text: 'Remember Login'
+                        font_size: 20
+                        text_size: self.size
+                        # color: [166/255, 166/255, 166/255, 1]
+                        color: [80/255, 80/255, 80/255, 1]
+                        halign: 'left'
+                        valign: 'middle'
+                    PvpnToggleSwitch:
+                        id: remember_login_switch
+                        size_hint: (None, None)
+                        size: (63, 30.66)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        state: 'down'
+                        disabled: True
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 50
+                    Label:
+                        text: 'Start on Boot'
+                        font_size: 20
+                        text_size: self.size
+                        # color: [166/255, 166/255, 166/255, 1]
+                        color: [80/255, 80/255, 80/255, 1]
+                        halign: 'left'
+                        valign: 'middle'
+                    PvpnToggleSwitch:
+                        id: start_on_boot_switch
+                        size_hint: (None, None)
+                        size: (63, 30.66)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        state: 'normal'
+                        disabled: True
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: 50
+                    # padding: [0, 0, 0, 30]
+                    Label:
+                        text: 'Auto-Connect on Launch'
+                        font_size: 20
+                        text_size: self.size
+                        # color: [166/255, 166/255, 166/255, 1]
+                        color: [80/255, 80/255, 80/255, 1]
+                        halign: 'left'
+                        valign: 'middle'
+                    PvpnToggleSwitch:
+                        id: auto_connect_switch
+                        size_hint: (None, None)
+                        size: (63, 30.66)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        state: 'normal'
+                        disabled: True
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Label:
+                        text: 'Quick Connect'
+                        font_size: 20
+                        text_size: self.size
+                        # color: [166/255, 166/255, 166/255, 1]
+                        color: [80/255, 80/255, 80/255, 1]
+                        halign: 'left'
+                        valign: 'middle'
+                        # size_hint_x: 0.85
+                    PvpnSpinner:
+                        id: quick_connect_function
+                        name: '_quick_connect_'
+                        text: 'Fastest Server'
+                        values: 'Fastest Server',
+                        disabled: True
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Label:
+                        text: 'Refresh Rate'
+                        font_size: 20
+                        text_size: self.size
+                        # color: [166/255, 166/255, 166/255, 1]
+                        color: [80/255, 80/255, 80/255, 1]
+                        halign: 'left'
+                        valign: 'middle'
+                        # size_hint_x: 0.85
+                    PvpnSpinner:
+                        id: refresh_rate
+                        name: '_refresh_rate_'
+                        text: '5 minutes'
+                        values: '5 minutes',
+                        disabled: True
+                BoxLayout:
+                    orientation: 'horizontal'
+                    padding: [0, 30, 0, 0]
+                    spacing: 20
+                    size_hint_y: None
+                    height: 100
+                    PvpnStandardButton:
+                        text: 'Close'
+                        on_release:
+                            app.root.transition = FallOutTransition()
+                            app.root.current = '_main_screen_'
+                            app.title = 'ProtonVPN-GUI'
+                            app.title = 'ProtonVPN-GUI'
+                    PvpnStandardButton:
+                        id: update_button
+                        text: 'Update'
+                        disabled: True
+                        # on_release:

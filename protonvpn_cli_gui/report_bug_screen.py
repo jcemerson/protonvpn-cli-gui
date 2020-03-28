@@ -15,8 +15,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from protonvpnguiapp import ProtonVpnGuiApp  # pylint: disable=import-error
+# Kivy Libraries
+from kivy.uix.screenmanager import Screen
 
-# Instantiate top-level/root widget and run it.
-if __name__ == "__main__":
-    ProtonVpnGuiApp().run()
+
+class ReportBugScreen(Screen):
+    pass
