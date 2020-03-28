@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-# ProtonVPN-GUI
-
-Work in progress...
-
-https://www.reddit.com/r/ProtonVPN/comments/fc3jcz/protonvvpngui_for_linux_work_in_progress/
-=======
 <h1 align="center">ProtonVPN-CLI-GUI</h1>
 
 <p align="center">
@@ -164,4 +157,3 @@ Some remaining features include:
 <p align="center">
   <img src="https://github.com/jcemerson/protonvpn-cli-gui/blob/master/protonvpn_cli_gui/images/Screenshot%20from%202020-03-22%2020-30-00.png" alt="VPN Settings"></img>
 </p>
->>>>>>> master
