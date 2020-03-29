@@ -2,5 +2,5 @@
 openvpn
 python3-pip
 python3-setuptools
-kivy>=1.10.0 [libsdl2-dev][pygame][libglew-dev]
+kivy>=1.10.0
 protonvpn-cli>=2.2.2
