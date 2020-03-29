@@ -1,5 +1,5 @@
-# Call with pip install -r requirements.txt
-python3-pip
-python3-setuptools
+# Call with pip3 install -r requirements.txt
+pip
+setuptools
 kivy>=1.10.0
 protonvpn-cli>=2.2.2
