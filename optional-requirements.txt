@@ -1,0 +1,5 @@
+# Call with pip install -r optional-requirements.txt
+
+libsdl2-dev
+pygame
+libglew-dev
