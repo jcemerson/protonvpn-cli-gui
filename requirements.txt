@@ -1,0 +1,6 @@
+# Call with pip install -r requirements.txt
+openvpn
+python3-pip
+python3-setuptools
+kivy>=1.10.0 [libsdl2-dev][pygame][libglew-dev]
+protonvpn-cli>=2.2.2
