@@ -89,7 +89,7 @@ from .report_bug_screen import ReportBugScreen  # noqa
 from .welcome_screen import WelcomeScreen  # noqa
 
 # Set version of GUI app
-VERSION = '0.1.9'
+VERSION = '0.1.10'
 
 # Add resource directory to Kivy Path for additional kv and image files
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -869,18 +869,6 @@ class ProtonVpnGuiApp(App):
 
     def check_update(self):
         """Return the download URL if Update is available, False otherwise"""
-        # Determine if an update check should be run
-        check_interval = int(pvpncli_utils.get_config_value(
-            "USER", "check_update_interval"
-        ))
-        check_interval = check_interval * 24 * 3600
-        last_check = int(pvpncli_utils.get_config_value(
-            "metadata", "last_update_check"
-        ))
-
-        if (last_check + check_interval) >= time():
-            # Don't check for update
-            return
 
         pvpncli_logger.logger.debug("Checking for new update")
         current_version = list(VERSION.split("."))
