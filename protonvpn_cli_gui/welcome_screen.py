@@ -38,8 +38,11 @@ class WelcomeScreen(Screen):
         app = App.get_running_app()
 
         # Check for update:
-        print("calling app.check_update")
-        app.check_update()
+        try:
+            print("calling app.check_update")
+            app.check_update()
+        except KeyError:
+            pass
         Clock.schedule_once(self.verify_login_credentials)
 
     def verify_login_credentials(self, dt):

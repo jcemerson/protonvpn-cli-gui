@@ -48,6 +48,11 @@ For more detailed information on installing, updating and uninstalling, please v
 |Arch Linux/Manjaro                       | `sudo pacman -S openvpn dialog python-pip python-setuptools`       |
 
 
+**Installing ProtonVPN-CLI**
+
+`sudo pip3 install protonvpn-cli`
+
+
 Once you've installed <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b>protonvpn-cli-ng</b></a>, install <b>ProtonVPN-CLI-GUI</b>.
 
 *Note: This has only been tested on Linux Mint 19.3 Cinnamon.*
@@ -55,7 +60,14 @@ Once you've installed <a href="https://github.com/ProtonVPN/protonvpn-cli-ng"><b
 
 ## Installing ProtonVPN-CLI-GUI
 
-You can either install via <b>PIP</b> (simple) or by cloning this repository (must manually manage dependencies, etc).
+**Kivy Dependencies**
+
+Prior to installing the GUI, run the following command to ensure the necessary Kivy dependencies are in place.
+
+`sudo apt install -y build-essential git python3-dev ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev xclip`
+
+
+For installing the GUI, you can either install via <b>PIP</b> (simple) or by cloning this repository (must manually manage dependencies, etc).
 
 *Note: Make sure to run pip with sudo*
 
